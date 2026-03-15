@@ -84,9 +84,24 @@ function ProgressRow({ label, score, max, color }) {
 
 export default function JSAnalysis() {
     const navigate = useNavigate()
-    const { analysis, chatOpen, setChatOpen } = useAppStore()
+    const { profile, analysis, fetchAnalysis, roadmap, chatOpen, setChatOpen } = useAppStore()
     
-    if (!analysis) return null
+    useEffect(() => {
+        if (!analysis || analysis.career_matches.length === 0) {
+            fetchAnalysis()
+        }
+    }, [analysis, fetchAnalysis])
+
+    if (!analysis || (analysis.career_matches.length === 0 && !analysis.career_health_score)) {
+        return (
+            <div className="flex h-screen bg-[#0F172A] items-center justify-center text-white">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-xl font-bold">Analyzing Your Skill Genome...</p>
+                </div>
+            </div>
+        )
+    }
 
     const score = analysis.career_health_score || 0
     const matches = analysis.career_matches || []
@@ -122,25 +137,27 @@ export default function JSAnalysis() {
                             </div>
 
                             {/* Section 4 - Hidden Strengths Banner */}
-                            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600/20 to-orange-900/40 border border-amber-500/30 p-6 opacity-0 animate-[fade-in-up_0.6s_ease-out_0.3s_forwards] group cursor-pointer hover:border-amber-400/50 transition-colors" onClick={() => navigate('/roadmap')}>
-                                <div className="absolute top-0 right-0 -mr-4 -mt-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <Zap size={100} className="text-amber-500" />
-                                </div>
-                                <div className="flex items-start gap-4 relative z-10">
-                                    <div className="mt-1 flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-                                        <Zap size={20} className="text-amber-400" />
+                            {(analysis.genome_shortcut || (roadmap && roadmap.genome_shortcut)) && (
+                                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600/20 to-orange-900/40 border border-amber-500/30 p-6 opacity-0 animate-[fade-in-up_0.6s_ease-out_0.3s_forwards] group cursor-pointer hover:border-amber-400/50 transition-colors" onClick={() => navigate('/roadmap')}>
+                                    <div className="absolute top-0 right-0 -mr-4 -mt-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                        <Zap size={100} className="text-amber-500" />
                                     </div>
-                                    <div>
-                                        <h3 className="text-lg font-bold text-amber-300 mb-2">⚡ Skill Genome Found a Shortcut!</h3>
-                                        <p className="text-sm font-medium text-amber-100/80 mb-4 leading-relaxed">
-                                            Because you know <strong className="text-white">Excel</strong>, you're 55% of the way to <strong className="text-white">SQL</strong>. Your SQL learning starts at Week 3, not Week 1. You saved 5 weeks.
-                                        </p>
-                                        <button className="flex items-center gap-2 text-xs font-bold bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 px-4 py-2 rounded-lg transition-colors border border-amber-500/30">
-                                            Start SQL Shortcut Path <ArrowRight size={14} />
-                                        </button>
+                                    <div className="flex items-start gap-4 relative z-10">
+                                        <div className="mt-1 flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                                            <Zap size={20} className="text-amber-400" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-bold text-amber-300 mb-2">⚡ Skill Genome Found a Shortcut!</h3>
+                                            <p className="text-sm font-medium text-amber-100/80 mb-4 leading-relaxed">
+                                                {(analysis.genome_shortcut || roadmap.genome_shortcut).message}
+                                            </p>
+                                            <button className="flex items-center gap-2 text-xs font-bold bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 px-4 py-2 rounded-lg transition-colors border border-amber-500/30">
+                                                Start {profile?.skills?.[0] || 'Skill'} Shortcut Path <ArrowRight size={14} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
 
                         {/* Right Column (Sections 2 & 3) */}
@@ -248,7 +265,13 @@ export default function JSAnalysis() {
                 </div>
             </main>
 
-            {chatOpen && <AIChatPanel />}
+            {chatOpen && (
+                <AIChatPanel 
+                    userType="jobseeker" 
+                    isOpen={chatOpen} 
+                    onClose={() => setChatOpen(false)} 
+                />
+            )}
         </div>
     )
 }

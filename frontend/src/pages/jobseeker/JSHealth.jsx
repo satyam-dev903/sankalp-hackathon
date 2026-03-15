@@ -120,7 +120,13 @@ function SubScoreBar({ label, score, max, tooltip, delay }) {
 }
 
 export default function JSHealth() {
-    const { analysis, chatOpen, setChatOpen } = useAppStore()
+    const { analysis, fetchAnalysis, chatOpen, setChatOpen } = useAppStore()
+    
+    useEffect(() => {
+        if (!analysis) {
+            fetchAnalysis()
+        }
+    }, [analysis, fetchAnalysis])
     
     // Mock data if analysis is not fully populated for this page
     const score = analysis?.career_health_score || 42
@@ -260,7 +266,13 @@ export default function JSHealth() {
                 </div>
             </main>
 
-            {chatOpen && <AIChatPanel />}
+            {chatOpen && (
+                <AIChatPanel 
+                    userType="jobseeker" 
+                    isOpen={chatOpen} 
+                    onClose={() => setChatOpen(false)} 
+                />
+            )}
         </div>
     )
 }

@@ -30,11 +30,20 @@ const FEEDBACK_SCORES = [
 
 export default function JSInterview() {
     const navigate = useNavigate()
-    const { chatOpen, setChatOpen } = useAppStore()
+    const { 
+        chatOpen, setChatOpen, 
+        profile, 
+        interviewTranscript, setInterviewTranscript,
+        fetchInterviewResponse 
+    } = useAppStore()
+    
     const [status, setStatus] = useState('lobby') // lobby, active, feedback
     const [isRecording, setIsRecording] = useState(false)
     const [voiceWave, setVoiceWave] = useState(Array(20).fill(5))
+    const [inputValue, setInputValue] = useState('')
     const timerRef = useRef()
+
+    const role = profile?.skills?.length > 0 ? profile.skills[0] : "Data Analyst";
 
     // Simulate voice recording animation
     useEffect(() => {
@@ -49,8 +58,24 @@ export default function JSInterview() {
         return () => clearInterval(timerRef.current)
     }, [isRecording])
 
-    const startInterview = () => setStatus('active')
-    const finishInterview = () => setStatus('feedback')
+    const startInterview = async () => {
+        setInterviewTranscript([])
+        setStatus('active')
+        await fetchInterviewResponse(role, "Hello, start the interview.", [])
+    }
+
+    const handleSendMessage = async () => {
+        if (!inputValue.trim()) return
+        const userMsg = { role: 'user', content: inputValue }
+        setInterviewTranscript([...interviewTranscript, userMsg])
+        setInputValue('')
+        await fetchInterviewResponse(role, inputValue, [...interviewTranscript, userMsg])
+    }
+
+    const finishInterview = async () => {
+        setStatus('feedback')
+        await fetchInterviewResponse(role, "Provide feedback for this interview.", interviewTranscript, 'feedback')
+    }
 
     return (
         <div className="flex h-screen bg-[#0F172A] overflow-hidden text-slate-100 relative">
@@ -68,7 +93,7 @@ export default function JSInterview() {
                             <div>
                                 <h1 className="text-4xl font-black text-white mb-4 tracking-tight">AI Mock Interview</h1>
                                 <p className="text-slate-400 text-lg font-medium leading-relaxed">
-                                    Our AI will conduct a realistic interview for your <strong className="text-white">Data Analyst</strong> path. Get real-time feedback on your voice, confidence, and context.
+                                    Our AI will conduct a realistic interview for your <strong className="text-white">{role}</strong> path. Get real-time feedback on your voice, confidence, and context.
                                 </p>
                             </div>
                             
@@ -76,8 +101,8 @@ export default function JSInterview() {
                                 <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest">How it works</h3>
                                 <ul className="space-y-3">
                                     {[
-                                        "Voice-first interaction (text-to-speech enabled)",
-                                        "3-5 tailored professional questions",
+                                        "Voice-first interaction (text enabled)",
+                                        "Tailored professional questions",
                                         "Detailed performance scorecard at the end"
                                     ].map((step, i) => (
                                         <li key={i} className="flex items-center gap-3 text-slate-300 font-medium">
@@ -107,7 +132,7 @@ export default function JSInterview() {
                                     <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center text-emerald-400 border border-emerald-500/20 animate-pulse">
                                         <div className="w-2 h-2 rounded-full bg-emerald-400"></div>
                                     </div>
-                                    <h3 className="font-bold text-white tracking-tight">Session Live: Data Analyst Role</h3>
+                                    <h3 className="font-bold text-white tracking-tight">Session Live: {role} Role</h3>
                                 </div>
                                 <button onClick={() => setStatus('lobby')} className="text-slate-500 hover:text-white transition-colors">
                                     <X size={20} />
@@ -116,23 +141,41 @@ export default function JSInterview() {
 
                             {/* Dialogue Area */}
                             <div className="flex-1 overflow-y-auto space-y-6 pr-4 focus:outline-none custom-scrollbar">
-                                {MOCK_TRANSCRIPT.map((msg, idx) => (
-                                    <div key={idx} className={`flex ${msg.sender === 'AI' ? 'justify-start' : 'justify-end'} animate-in fade-in slide-in-from-bottom-2`}>
+                                {interviewTranscript.map((msg, idx) => (
+                                    <div key={idx} className={`flex ${msg.role === 'assistant' ? 'justify-start' : 'justify-end'} animate-in fade-in slide-in-from-bottom-2`}>
                                         <div className={`max-w-[80%] p-4 rounded-2xl ${
-                                            msg.sender === 'AI' 
+                                            msg.role === 'assistant' 
                                             ? 'bg-slate-800 border-l-4 border-l-blue-500 text-slate-200' 
                                             : 'bg-blue-600 text-white shadow-lg'
                                         }`}>
                                             <div className="flex items-center gap-2 mb-1.5">
                                                 <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
-                                                    {msg.sender === 'AI' ? 'AI Interviewer' : 'You'}
+                                                    {msg.role === 'assistant' ? 'AI Interviewer' : 'You'}
                                                 </span>
-                                                {msg.sender === 'AI' && <Volume2 size={12} className="text-blue-400" />}
+                                                {msg.role === 'assistant' && <Volume2 size={12} className="text-blue-400" />}
                                             </div>
-                                            <p className="text-sm font-semibold leading-relaxed">{msg.text}</p>
+                                            <p className="text-sm font-semibold leading-relaxed">{msg.content}</p>
                                         </div>
                                     </div>
                                 ))}
+                            </div>
+
+                            {/* Input Area */}
+                            <div className="flex gap-4 mb-4">
+                                <input 
+                                    type="text"
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                                    placeholder="Type your response..."
+                                    className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-all"
+                                />
+                                <button 
+                                    onClick={handleSendMessage}
+                                    className="bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-xl font-bold transition-all"
+                                >
+                                    Send
+                                </button>
                             </div>
 
                             {/* Voice Control Bar */}
@@ -183,7 +226,11 @@ export default function JSInterview() {
                             </div>
 
                             <div className="grid md:grid-cols-3 gap-6">
-                                {FEEDBACK_SCORES.map((item, idx) => (
+                                {[
+                                    { label: 'Confidence', score: 85 },
+                                    { label: 'Clarity', score: 78 },
+                                    { label: 'Tech Skill', score: 92 }
+                                ].map((item, idx) => (
                                     <div key={item.label} className="glass-card p-6 flex flex-col items-center text-center">
                                         <div className="relative w-24 h-24 flex items-center justify-center mb-4">
                                             <svg className="w-full h-full transform -rotate-90">
@@ -210,16 +257,10 @@ export default function JSInterview() {
                                     <MessageSquare size={20} className="text-blue-400" /> AI Insights
                                 </h3>
                                 <div className="space-y-6">
-                                    <div className="bg-emerald-500/5 border border-emerald-500/20 p-5 rounded-xl">
-                                        <h4 className="text-emerald-400 font-bold text-sm mb-2 flex items-center gap-2"><Zap size={14} /> Key Strength</h4>
+                                    <div className="bg-blue-500/5 border border-blue-500/20 p-5 rounded-xl">
+                                        <h4 className="text-blue-400 font-bold text-sm mb-2 flex items-center gap-2"><Zap size={14} /> Comprehensive Review</h4>
                                         <p className="text-sm text-slate-300 leading-relaxed font-medium">
-                                            Your explanation of "Data Visualization" was exemplary—using concrete examples like "reporting revenue trends" significantly boosts credibility.
-                                        </p>
-                                    </div>
-                                    <div className="bg-rose-500/5 border border-rose-500/20 p-5 rounded-xl">
-                                        <h4 className="text-rose-400 font-bold text-sm mb-2 flex items-center gap-2"><TrendingUp size={14} className="rotate-180" /> Area for Improvement</h4>
-                                        <p className="text-sm text-slate-300 leading-relaxed font-medium">
-                                            When asked about "Missing Data," you hesitated for 4 seconds. Mastering the <strong className="text-white">Imputation roadmap</strong> will give you more technical confidence.
+                                            {interviewTranscript[interviewTranscript.length - 1]?.content || "Your performance was commendable. Focus on articulation during technical deep-dives."}
                                         </p>
                                     </div>
                                 </div>
@@ -244,7 +285,13 @@ export default function JSInterview() {
                 </div>
             </main>
 
-            {chatOpen && <AIChatPanel />}
+            {chatOpen && (
+                <AIChatPanel 
+                    userType="jobseeker" 
+                    isOpen={chatOpen} 
+                    onClose={() => setChatOpen(false)} 
+                />
+            )}
         </div>
     )
 }

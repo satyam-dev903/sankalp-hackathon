@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAppStore from '../../store/useAppStore'
 import Sidebar from '../../components/Sidebar'
@@ -20,8 +20,14 @@ import {
 
 export default function JSRoadmap() {
     const navigate = useNavigate()
-    const { roadmap, updateRoadmapModule, addCustomModule, chatOpen, setChatOpen } = useAppStore()
+    const { profile, analysis, roadmap, fetchAnalysis, updateRoadmapModule, addCustomModule, chatOpen, setChatOpen } = useAppStore()
     
+    useEffect(() => {
+        if (!roadmap) {
+            fetchAnalysis()
+        }
+    }, [roadmap, fetchAnalysis])
+
     const [toast, setToast] = useState(false)
     const [aiPanelOpen, setAiPanelOpen] = useState(false)
     const [aiTargetModuleId, setAiTargetModuleId] = useState(null)
@@ -34,7 +40,16 @@ export default function JSRoadmap() {
     const [newTitle, setNewTitle] = useState('')
     const [newWeek, setNewWeek] = useState('')
 
-    if (!roadmap) return null
+    if (!roadmap) {
+        return (
+            <div className="flex h-screen bg-[#0F172A] items-center justify-center text-white">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-xl font-bold">Building Your Career Map...</p>
+                </div>
+            </div>
+        )
+    }
 
     const handleSyncSave = () => {
         setToast(true)
@@ -115,10 +130,10 @@ export default function JSRoadmap() {
                                 <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
                                     Adaptive Roadmap 
                                     <span className="bg-blue-900/40 text-blue-400 text-xs px-2 py-1 rounded-md border border-blue-500/30 font-semibold tracking-wider uppercase ml-2">
-                                        Data Analyst
+                                        {profile?.skills?.[0] || 'Strategic'}
                                     </span>
                                 </h1>
-                                <p className="text-slate-400 text-sm mt-1">Week {roadmap.current_week} of 12 • AI synchronized</p>
+                                <p className="text-slate-400 text-sm mt-1">Week {roadmap.current_week} of {roadmap.modules.length} • AI synchronized</p>
                             </div>
                             <div className="flex gap-3 w-full md:w-auto">
                                 <button onClick={() => setChatOpen(true)} className="flex-1 md:flex-none btn-outline text-xs px-4 py-2 border-purple-500/50 text-purple-300 hover:bg-purple-900/30 flex items-center justify-center gap-2 group">
@@ -144,15 +159,15 @@ export default function JSRoadmap() {
                         </div>
 
                         {/* Genome Shortcut Banner */}
-                        {roadmap.genome_shortcut && (
+                        {(roadmap.genome_shortcut || (analysis && analysis.genome_shortcut)) && (
                             <div className="mt-6 bg-amber-900/20 border border-amber-500/30 rounded-xl p-4 flex items-start gap-4 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
                                 <div className="p-2 border border-amber-500/30 bg-amber-900/40 rounded-lg text-amber-400 flex-shrink-0 animate-pulse-slow">
                                     <Zap size={20} />
                                 </div>
                                 <div>
-                                    <h4 className="text-sm font-bold text-amber-300 mb-1">⚡ Excel Shortcut Active</h4>
+                                    <h4 className="text-sm font-bold text-amber-300 mb-1">⚡ Skill Shortcut Active</h4>
                                     <p className="text-xs text-amber-200/80 leading-relaxed font-medium">
-                                        {roadmap.genome_shortcut.message}. Bypassing introduction modules.
+                                        {(roadmap.genome_shortcut || analysis.genome_shortcut).message}. Bypassing introduction modules.
                                     </p>
                                 </div>
                             </div>
@@ -396,7 +411,13 @@ export default function JSRoadmap() {
                 <span className="text-sm font-bold tracking-wide">Roadmap synced to your profile</span>
             </div>
 
-            {chatOpen && <AIChatPanel />}
+            {chatOpen && (
+                <AIChatPanel 
+                    userType="jobseeker" 
+                    isOpen={chatOpen} 
+                    onClose={() => setChatOpen(false)} 
+                />
+            )}
         </div>
     )
 }

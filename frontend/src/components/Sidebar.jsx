@@ -17,7 +17,8 @@ import {
     MessageSquare,
     LogOut,
     Menu,
-    X
+    X,
+    Sparkles
 } from 'lucide-react'
 import useAppStore from '../store/useAppStore'
 
@@ -91,14 +92,17 @@ export default function Sidebar({ userType = 'jobseeker', onChatOpen }) {
                 {/* Logo Section */}
                 <div className="h-20 flex items-center px-6 border-b border-slate-800">
                     <div className="flex items-center gap-3">
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-lg
-                            ${userType === 'govt' ? 'bg-gradient-to-br from-purple-500 to-fuchsia-600 shadow-purple-900/50' : 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-blue-900/50'}
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg p-1.5 overflow-hidden border border-white/20
+                            ${userType === 'govt' ? 'bg-gradient-to-br from-purple-500 to-indigo-700 shadow-purple-900/50' : 'bg-gradient-to-br from-blue-500 to-indigo-600 shadow-blue-900/50'}
                         `}>
-                            <Zap size={18} className="text-white" />
+                            <img src="/src/assets/logo.png" alt="Logo" className="w-full h-full object-cover" />
                         </div>
-                        <span className="text-xl font-bold tracking-tight text-white drop-shadow-md">
-                            {userType === 'govt' ? 'Kaushal Govt' : 'KaushalAI'}
-                        </span>
+                        <div className="flex flex-col select-none">
+                            <span className="font-black text-xl tracking-tighter text-white leading-none">KAUSHALAI</span>
+                            <span className={`text-[9px] font-black tracking-[0.25em] uppercase mt-0.5 ${userType === 'govt' ? 'text-purple-400' : 'text-blue-400'}`}>
+                                {userType === 'govt' ? 'GOVERNMENT' : 'INTELLIGENCE'}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -129,19 +133,18 @@ export default function Sidebar({ userType = 'jobseeker', onChatOpen }) {
                 <div className="p-4 border-t border-slate-800 bottom-section">
                     
                     {/* Ask AI Button */}
+                    {/* Ask AI Helper Card */}
                     <button 
                         onClick={onChatOpen}
-                        className={`
-                            w-full mb-4 flex items-center justify-center gap-2 py-2.5 rounded-lg transition-all
-                            font-semibold text-sm shadow-lg
-                            ${userType === 'govt' 
-                                ? 'bg-purple-600 hover:bg-purple-700 shadow-purple-900/20 hover:shadow-purple-900/40' 
-                                : 'bg-blue-600 hover:bg-blue-700 shadow-blue-900/20 hover:shadow-blue-900/40'
-                            } text-white
-                        `}
-                    >
-                        <MessageSquare size={16} />
-                        <span>Ask AI Assistant</span>
+                        className="w-full relative group overflow-hidden bg-slate-800/40 border border-white/5 p-5 rounded-2xl transition-all hover:bg-slate-800 hover:border-blue-500/50 shadow-2xl">
+                        <div className={`absolute top-0 right-0 w-24 h-24 rounded-full blur-2xl -mr-12 -mt-12 transition-all group-hover:bg-opacity-40 ${userType === 'govt' ? 'bg-purple-500/10' : 'bg-blue-500/10'}`} />
+                        <div className="relative z-10 flex flex-col items-center text-center">
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform border ${userType === 'govt' ? 'bg-purple-500/10 border-purple-500/20' : 'bg-blue-500/10 border-blue-500/20'}`}>
+                                <Sparkles className={userType === 'govt' ? 'text-purple-400' : 'text-blue-400'} size={24} />
+                            </div>
+                            <h4 className="text-sm font-black text-white mb-1">Ask AI Assistant</h4>
+                            <p className="text-[10px] font-bold text-slate-500 leading-tight">Need expert career guidance? Start chat now.</p>
+                        </div>
                     </button>
 
                     {/* User Profile Mini Card */}

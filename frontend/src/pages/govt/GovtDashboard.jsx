@@ -14,8 +14,12 @@ import {
     ChevronRight,
     Search,
     Download,
-    Eye
+    Eye,
+    User
 } from 'lucide-react'
+import ProfileSummary from '../../components/ProfileSummary'
+import ProfileEditor from '../../components/ProfileEditor'
+import useAppStore from '../../store/useAppStore'
 
 const GOVT_CONTEXT = {
     district: 'Nagpur',
@@ -38,6 +42,8 @@ const GOVT_CONTEXT = {
 
 export default function GovtDashboard() {
     const navigate = useNavigate()
+    const { govtProfile, chatOpen, setChatOpen, profile } = useAppStore()
+    const [isProfileEditorOpen, setIsProfileEditorOpen] = useState(false)
     const [chatMsg, setChatMsg] = useState('')
     const [chatHistory, setChatHistory] = useState([])
     const [chatLoading, setChatLoading] = useState(false)
@@ -124,6 +130,14 @@ export default function GovtDashboard() {
                             </button>
                         </div>
                     </header>
+
+                    <div className="mb-10">
+                        <ProfileSummary 
+                            userType="govt" 
+                            profile={govtProfile || profile} 
+                            onEdit={() => setIsProfileEditorOpen(true)} 
+                        />
+                    </div>
 
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
@@ -352,6 +366,12 @@ export default function GovtDashboard() {
                     </div>
                 </aside>
             </main>
+
+            <ProfileEditor 
+                userType="govt" 
+                isOpen={isProfileEditorOpen} 
+                onClose={() => setIsProfileEditorOpen(false)} 
+            />
         </div>
     )
 }

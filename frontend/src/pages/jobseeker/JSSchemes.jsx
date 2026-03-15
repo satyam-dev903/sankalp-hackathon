@@ -71,11 +71,19 @@ const MOCK_SCHEMES = [
 
 export default function JSSchemes() {
     const navigate = useNavigate()
-    const { chatOpen, setChatOpen } = useAppStore()
+    const { schemes, fetchSchemes, chatOpen, setChatOpen } = useAppStore()
     const [selectedScheme, setSelectedScheme] = useState(null)
     const [modalStep, setModalStep] = useState(0)
     const [eligibilityAnswers, setEligibilityAnswers] = useState({})
     const [isEligible, setIsEligible] = useState(null)
+
+    React.useEffect(() => {
+        if (schemes.length === 0) {
+            fetchSchemes()
+        }
+    }, [fetchSchemes, schemes.length])
+
+    const displaySchemes = schemes.length > 0 ? schemes : MOCK_SCHEMES
 
     const handleCheckEligibility = (scheme) => {
         setSelectedScheme(scheme)
@@ -126,7 +134,7 @@ export default function JSSchemes() {
 
                     {/* Schemes Grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {MOCK_SCHEMES.map((scheme, idx) => (
+                        {displaySchemes.map((scheme, idx) => (
                             <div 
                                 key={scheme.id} 
                                 className="glass-card flex flex-col hover:-translate-y-1 hover:border-slate-600 transition-all duration-300 opacity-0 animate-[fade-in-up_0.5s_ease-out_forwards]"
@@ -134,11 +142,11 @@ export default function JSSchemes() {
                             >
                                 <div className="p-6 flex-1 border-b border-slate-700/50">
                                     <div className="flex items-start gap-4 mb-4">
-                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-inner ${scheme.color}`}>
-                                            {scheme.icon}
+                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-inner ${scheme.color || 'bg-blue-600'}`}>
+                                            {scheme.emoji ? <span className="text-3xl">{scheme.emoji}</span> : (scheme.icon || <Building2 size={24} />)}
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-bold text-white leading-tight mb-1">{scheme.title}</h3>
+                                            <h3 className="text-lg font-bold text-white leading-tight mb-1">{scheme.title || scheme.name}</h3>
                                             <p className="text-sm font-semibold text-slate-400">{scheme.ministry}</p>
                                         </div>
                                     </div>
@@ -153,11 +161,19 @@ export default function JSSchemes() {
                                     <div>
                                         <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2">Eligibility Criteria</p>
                                         <div className="flex flex-wrap gap-2">
-                                            {scheme.eligibility.map(req => (
-                                                <span key={req} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 shadow-sm">
-                                                    {req}
-                                                </span>
-                                            ))}
+                                            {(() => {
+                                                const rawEli = scheme.eligibility || ['Citizens of India', 'Relevant Skills'];
+                                                if (Array.isArray(rawEli)) return rawEli.map(req => (
+                                                    <span key={req} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 shadow-sm">
+                                                        {req}
+                                                    </span>
+                                                ));
+                                                return Object.entries(rawEli).map(([key, value]) => (
+                                                    <span key={key} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700 shadow-sm uppercase">
+                                                        {key}: {value}
+                                                    </span>
+                                                ));
+                                            })()}
                                         </div>
                                     </div>
                                 </div>

@@ -5,7 +5,7 @@ import { Landmark, ShieldCheck, ArrowRight, Lock, User } from 'lucide-react'
 
 export default function GovtLogin() {
     const navigate = useNavigate()
-    const { setUser, setCategory } = useAppStore()
+    const { setUserType, updateProfile } = useAppStore()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -16,13 +16,13 @@ export default function GovtLogin() {
         
         // Cinematic delay
         setTimeout(() => {
-            setUser({ 
+            updateProfile('govt', { 
                 name: 'Ramesh IAS', 
                 district: 'Nagpur', 
-                role: 'collector', 
+                designation: 'District Collector',
                 email 
             })
-            setCategory('govt')
+            setUserType('govt')
             navigate('/govt/dashboard')
         }, 1200)
     }
@@ -36,8 +36,8 @@ export default function GovtLogin() {
             <div className="w-full max-w-md relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
                 {/* Logo Section */}
                 <div className="flex flex-col items-center mb-10">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-700 flex items-center justify-center text-3xl shadow-2xl shadow-purple-500/20 mb-4 border border-white/10">
-                        <Landmark className="text-white" size={32} />
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-700 flex items-center justify-center shadow-2xl shadow-purple-500/20 mb-4 border border-white/10 overflow-hidden p-2">
+                        <img src="/src/assets/logo.png" alt="KaushalAI" className="w-full h-full object-cover" />
                     </div>
                     <h1 className="text-3xl font-black text-white tracking-tight">KaushalAI</h1>
                     <div className="flex items-center gap-2 mt-2">

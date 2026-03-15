@@ -261,7 +261,13 @@ export default function JSResume() {
                 </div>
             </main>
 
-            {chatOpen && <AIChatPanel />}
+            {chatOpen && (
+                <AIChatPanel 
+                    userType="jobseeker" 
+                    isOpen={chatOpen} 
+                    onClose={() => setChatOpen(false)} 
+                />
+            )}
         </div>
     )
 }

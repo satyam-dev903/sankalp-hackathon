@@ -77,11 +77,11 @@ export default function Landing() {
             {/* Sticky Navbar */}
             <nav className="fixed top-0 w-full z-50 border-b border-white/[0.05] bg-black/40 backdrop-blur-xl">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm shadow-[0_0_15px_rgba(147,51,234,0.5)]">
-                            <Zap size={16} className="text-white" />
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center p-1.5 shadow-lg shadow-blue-500/20 border border-white/10 overflow-hidden">
+                            <img src="/src/assets/logo.png" alt="Logo" className="w-full h-full object-cover" />
                         </div>
-                        <span className="text-xl font-bold tracking-tight text-white drop-shadow-md">KaushalAI</span>
+                        <span className="text-xl font-bold tracking-tighter text-white drop-shadow-md">KAUSHALAI</span>
                     </div>
                     <div className="flex items-center gap-6">
                         <span onClick={() => document.getElementById('platforms')?.scrollIntoView({ behavior: 'smooth' })}
@@ -217,8 +217,10 @@ export default function Landing() {
             {/* Footer */}
             <footer className="border-t border-white/[0.05] bg-[#030712]/80 backdrop-blur-2xl">
                 <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div className="flex items-center gap-3 text-slate-500 text-sm font-medium hover:text-white transition-colors cursor-pointer">
-                        <div className="w-6 h-6 rounded-md bg-gradient-to-br from-blue-500/20 to-purple-600/20 flex items-center justify-center text-xs">⚡</div>
+                    <div className="flex items-center gap-3 text-slate-500 text-sm font-medium hover:text-white transition-colors cursor-pointer group">
+                        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500/20 to-indigo-600/20 flex items-center justify-center p-1 border border-white/10 group-hover:border-blue-500/50 transition-all">
+                            <img src="/src/assets/logo.png" alt="Logo" className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
+                        </div>
                         KaushalAI © 2026
                     </div>
                     <div className="flex flex-wrap justify-center gap-8 text-sm font-medium text-slate-500">

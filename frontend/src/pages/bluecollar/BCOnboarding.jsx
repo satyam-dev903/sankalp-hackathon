@@ -9,18 +9,18 @@ const STEPS = [
         questionEn: 'What is your work?',
         field: 'kaam',
         options: [
-            { emoji: '🏗️', label: 'Mazdoor' },
-            { emoji: '🍳', label: 'Rasoi' },
-            { emoji: '🚗', label: 'Driver' },
-            { emoji: '🧵', label: 'Darzi' },
-            { emoji: '🧹', label: 'Safai' },
-            { emoji: '🛒', label: 'Dukaan' },
-            { emoji: '💂', label: 'Security' },
-            { emoji: '🌾', label: 'Khet' },
-            { emoji: '🔧', label: 'Mistri' },
-            { emoji: '🎨', label: 'Painter' },
-            { emoji: '🏠', label: 'Ghar ka kaam' },
-            { emoji: '✏️', label: 'Kuch aur' },
+            { img: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&q=80', label: 'Mazdoor' },
+            { img: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&q=80', label: 'Rasoi' },
+            { img: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400&q=80', label: 'Driver' },
+            { img: 'https://images.unsplash.com/photo-1524234107056-1c1f48f64ab8?w=400&q=80', label: 'Darzi' },
+            { img: 'https://images.unsplash.com/photo-1581578731522-f83ed5bc2250?w=400&q=80', label: 'Safai' },
+            { img: 'https://images.unsplash.com/photo-1534452203294-49c8913c60bd?w=400&q=80', label: 'Dukaan' },
+            { img: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=400&q=80', label: 'Security' },
+            { img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=80', label: 'Khet' },
+            { img: 'https://images.unsplash.com/photo-1503387762-592dee58c460?w=400&q=80', label: 'Mistri' },
+            { img: 'https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&q=80', label: 'Painter' },
+            { img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&q=80', label: 'Ghar ka kaam' },
+            { img: 'https://images.unsplash.com/photo-1454165833767-027ffea9e7a7?w=400&q=80', label: 'Kuch aur' },
         ],
     },
     {
@@ -28,18 +28,18 @@ const STEPS = [
         questionEn: 'Where do you live?',
         field: 'jagah',
         options: [
-            { emoji: '🏜️', label: 'Rajasthan' },
-            { emoji: '🌊', label: 'Bihar' },
-            { emoji: '🕌', label: 'UP' },
-            { emoji: '🌆', label: 'Maharashtra' },
-            { emoji: '🌳', label: 'MP' },
-            { emoji: '🏭', label: 'Gujarat' },
-            { emoji: '⛏️', label: 'Jharkhand' },
-            { emoji: '🐯', label: 'WB' },
-            { emoji: '🏛️', label: 'Delhi' },
-            { emoji: '🌾', label: 'Punjab' },
-            { emoji: '🌅', label: 'Odisha' },
-            { emoji: '📍', label: 'Koi aur' },
+            { img: 'https://images.unsplash.com/photo-1590490359683-658d3d23f972?w=400&q=80', label: 'Rajasthan' },
+            { img: 'https://images.unsplash.com/photo-1584824486516-0555a07fc511?w=400&q=80', label: 'Bihar' },
+            { img: 'https://images.unsplash.com/photo-1564507592333-c60657eaa0ae?w=400&q=80', label: 'UP' },
+            { img: 'https://images.unsplash.com/photo-1566552881560-0be862a7c445?w=400&q=80', label: 'Maharashtra' },
+            { img: 'https://images.unsplash.com/photo-1594913785162-e67894101a0a?w=400&q=80', label: 'MP' },
+            { img: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?w=400&q=80', label: 'Gujarat' },
+            { img: 'https://images.unsplash.com/photo-1589135010620-307521197931?w=400&q=80', label: 'Jharkhand' },
+            { img: 'https://images.unsplash.com/photo-1558431382-27e30d148b67?w=400&q=80', label: 'WB' },
+            { img: 'https://images.unsplash.com/photo-1587474260584-1f39e4caec7d?w=400&q=80', label: 'Delhi' },
+            { img: 'https://images.unsplash.com/photo-1561081519-86927d2c3848?w=400&q=80', label: 'Punjab' },
+            { img: 'https://images.unsplash.com/photo-1594939223168-348b68831e5f?w=400&q=80', label: 'Odisha' },
+            { img: 'https://images.unsplash.com/photo-1454165833767-027ffea9e7a7?w=400&q=80', label: 'Koi aur' },
         ],
     },
     {
@@ -47,12 +47,12 @@ const STEPS = [
         questionEn: 'Monthly income?',
         field: 'kamaai',
         options: [
-            { emoji: '😔', label: '₹0–5K' },
-            { emoji: '😐', label: '₹5–8K' },
-            { emoji: '🙂', label: '₹8–12K' },
-            { emoji: '😊', label: '₹12–18K' },
-            { emoji: '😄', label: '₹18–25K' },
-            { emoji: '🤩', label: '₹25K+' },
+            { img: 'https://images.unsplash.com/photo-1580519542036-c47de6196ba5?w=400&q=80', label: '₹0–5K' },
+            { img: 'https://images.unsplash.com/photo-1554224155-169745fe9a5d?w=400&q=80', label: '₹5–8K' },
+            { img: 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=400&q=80', label: '₹8–12K' },
+            { img: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=400&q=80', label: '₹12–18K' },
+            { img: 'https://images.unsplash.com/photo-1579621970795-87f9ac75d651?w=400&q=80', label: '₹18–25K' },
+            { img: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=400&q=80', label: '₹25K+' },
         ],
     },
     {
@@ -60,12 +60,12 @@ const STEPS = [
         questionEn: 'Education level?',
         field: 'padhai',
         options: [
-            { emoji: '📵', label: 'Padha nahi' },
-            { emoji: '✏️', label: '5th Class' },
-            { emoji: '📓', label: '8th Class' },
-            { emoji: '📗', label: '10th Pass' },
-            { emoji: '📘', label: '12th Pass' },
-            { emoji: '🎓', label: 'ITI/Diploma' },
+            { img: 'https://images.unsplash.com/photo-1497633762265-9a177c8098a2?w=400&q=80', label: 'Padha nahi' },
+            { img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=80', label: '5th Class' },
+            { img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&q=80', label: '8th Class' },
+            { img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&q=80', label: '10th Pass' },
+            { img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=400&q=80', label: '12th Pass' },
+            { img: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&q=80', label: 'ITI/Diploma' },
         ],
     },
     {
@@ -73,12 +73,12 @@ const STEPS = [
         questionEn: 'What is your goal?',
         field: 'sapna',
         options: [
-            { emoji: '💼', label: 'Naukri chahiye' },
-            { emoji: '🏪', label: 'Business shuru' },
-            { emoji: '💰', label: 'Paisa badhao' },
-            { emoji: '🌆', label: 'Shehar mein kaam' },
-            { emoji: '📱', label: 'Online becho' },
-            { emoji: '📚', label: 'Kuch seekhna' },
+            { img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80', label: 'Naukri chahiye' },
+            { img: 'https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400&q=80', label: 'Business shuru' },
+            { img: 'https://images.unsplash.com/photo-1589758438368-0ad531955287?w=400&q=80', label: 'Paisa badhao' },
+            { img: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&q=80', label: 'Shehar mein kaam' },
+            { img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=400&q=80', label: 'Online becho' },
+            { img: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400&q=80', label: 'Kuch seekhna' },
         ],
     },
 ]
@@ -246,7 +246,7 @@ export default function BCOnboarding() {
     return (
         <div className="min-h-screen bg-[#0F172A] flex" style={{ fontFamily: 'Inter, sans-serif' }}>
             {/* LEFT — Conversation */}
-            <div className="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto">
+            <div className="flex-1 flex flex-col p-4 md:p-6 overflow-y-auto max-w-6xl mx-auto w-full">
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-lg">⚡</div>
@@ -297,33 +297,52 @@ export default function BCOnboarding() {
                         </div>
 
                         {/* Picture Grid */}
-                        <div className={`grid gap-2 mb-3`} style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
+                        <div className={`grid gap-3 mb-6`} style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
                             {currentStepData.options.map((opt, i) => (
                                 <button
                                     key={i}
                                     onClick={() => handleSelect(opt)}
-                                    className="picture-card"
-                                    style={{ minHeight: 80 }}>
-                                    <span className="text-3xl">{opt.emoji}</span>
-                                    <span className="text-xs font-bold text-slate-200 text-center leading-tight">{opt.label}</span>
+                                    className="picture-card group">
+                                    <img src={opt.img} alt={opt.label} />
+                                    <span className="label-overlay">{opt.label}</span>
                                 </button>
                             ))}
                         </div>
 
-                        {/* Custom text input */}
-                        <div className="flex gap-2">
-                            <input
-                                type="text"
-                                value={customInput}
-                                onChange={e => setCustomInput(e.target.value)}
-                                onKeyDown={e => e.key === 'Enter' && handleCustomSubmit()}
-                                placeholder="Ya type karein..."
-                                className="flex-1 bg-slate-700/50 border border-slate-600/50 text-white placeholder-slate-500 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500"
-                            />
-                            <button onClick={handleCustomSubmit} disabled={!customInput.trim()}
-                                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold disabled:opacity-40 transition-all">
-                                ✓
-                            </button>
+                        {/* Custom text input & Navigation */}
+                        <div className="flex flex-col gap-4">
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={customInput}
+                                    onChange={e => setCustomInput(e.target.value)}
+                                    onKeyDown={e => e.key === 'Enter' && handleCustomSubmit()}
+                                    placeholder="Ya type karein..."
+                                    className="flex-1 bg-slate-700/30 border border-slate-600/30 text-white placeholder-slate-500 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-emerald-500/50 transition-all"
+                                />
+                                <button onClick={handleCustomSubmit} disabled={!customInput.trim()}
+                                    className="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold shadow-lg shadow-emerald-900/20 disabled:opacity-40 transition-all">
+                                    ✓
+                                </button>
+                            </div>
+
+                            {currentStep > 0 && (
+                                <button 
+                                    onClick={() => {
+                                        const prevStep = currentStep - 1
+                                        setCurrentStep(prevStep)
+                                        // Remove the last two messages (user response and prev AI question) to maintain flow
+                                        setMessages(prev => prev.slice(0, -2))
+                                        // Reset answers for the current step
+                                        const newAnswers = { ...answers }
+                                        delete newAnswers[STEPS[currentStep].field]
+                                        setAnswers(newAnswers)
+                                    }}
+                                    className="w-fit text-slate-400 hover:text-white text-xs font-semibold px-2 py-1 flex items-center gap-1 transition-colors"
+                                >
+                                    ← Piche chalo (Back)
+                                </button>
+                            )}
                         </div>
                     </>
                 )}

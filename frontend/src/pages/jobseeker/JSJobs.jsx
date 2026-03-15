@@ -103,13 +103,21 @@ const MOCK_JOBS = [
 
 export default function JSJobs() {
     const navigate = useNavigate()
-    const { chatOpen, setChatOpen } = useAppStore()
+    const { profile, jobs, fetchJobs, chatOpen, setChatOpen } = useAppStore()
     const [activeTab, setActiveTab] = useState('All')
     const [searchQuery, setSearchQuery] = useState('')
 
-    const filteredJobs = MOCK_JOBS.filter(job => {
-        const matchesSearch = job.role.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                              job.company.toLowerCase().includes(searchQuery.toLowerCase())
+    React.useEffect(() => {
+        if (jobs.length === 0) {
+            fetchJobs(profile?.location)
+        }
+    }, [fetchJobs, jobs.length, profile?.location])
+
+    const displayJobs = jobs.length > 0 ? jobs : MOCK_JOBS
+
+    const filteredJobs = displayJobs.filter(job => {
+        const matchesSearch = (job.role || job.title || '').toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              (job.company || '').toLowerCase().includes(searchQuery.toLowerCase())
         
         if (!matchesSearch) return false
 
@@ -207,13 +215,13 @@ export default function JSJobs() {
                                     {/* Role & Match */}
                                     <div className="flex justify-between items-start mb-4">
                                         <div>
-                                            <h2 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">{job.role}</h2>
+                                            <h2 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">{job.role || job.title}</h2>
                                             <div className="flex flex-col gap-1.5">
                                                 <div className="flex items-center gap-2 text-sm text-slate-400 font-medium">
-                                                    <MapPin size={14} className="opacity-70" /> {job.location}
+                                                    <MapPin size={14} className="opacity-70" /> {job.location || job.district}
                                                 </div>
                                                 <div className="flex items-center gap-2 text-sm text-slate-300 font-semibold">
-                                                    <IndianRupee size={14} className="opacity-70 text-emerald-400" /> {job.salary}
+                                                    <IndianRupee size={14} className="opacity-70 text-emerald-400" /> {job.salary || `₹${job.salary_min} - ₹${job.salary_max}`}
                                                 </div>
                                             </div>
                                         </div>
@@ -268,7 +276,13 @@ export default function JSJobs() {
                 </div>
             </main>
 
-            {chatOpen && <AIChatPanel />}
+            {chatOpen && (
+                <AIChatPanel 
+                    userType="jobseeker" 
+                    isOpen={chatOpen} 
+                    onClose={() => setChatOpen(false)} 
+                />
+            )}
         </div>
     )
 }

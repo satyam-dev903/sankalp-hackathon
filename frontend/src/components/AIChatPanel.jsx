@@ -1,38 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import useAppStore from '../store/useAppStore'
-import { Send, Mic, X, ChevronDown, ChevronUp, Loader2, Volume2, Square } from 'lucide-react'
+import { Send, Mic, X, ChevronDown, ChevronUp, Loader2, Volume2, Square, Clock } from 'lucide-react'
 
-const GEMINI_API_KEY = 'AIzaSyCZiUVg8VEvKGzDlH94MXA4xyDl8RMGlFY'
-const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`
-
-function buildSystemPrompt(userType, user, analysis, roadmap) {
-    const profile = user || { name: 'User', district: 'Jaipur', skills: ['Excel', 'Hindi Typing'] }
-    const latestAnalysis = analysis || {}
-    const roadmapStatus = roadmap || {}
-
-    const context = JSON.stringify({ profile, latest_analysis: latestAnalysis, roadmap_status: roadmapStatus })
-
-    if (userType === 'bluecollar') {
-        return `Tu KaushalAI ka helper hai ${profile.name || 'User'} ke liye.
-Profile: ${context}
-Rules: Bilkul simple Hindi. 3 sentences max. Koi English nahi except numbers.
-Koi paid course nahi. Sirf PMKVY, MUDRA, Udyam jaise free resources batao.
-Always warm aur helpful raho.`
-    }
-
-    if (userType === 'govt') {
-        return `You are KaushalAI's policy AI for ${profile.name || 'Officer'}, District Collector of ${profile.district || 'Nagpur'}.
-District data: ${context}
-Rules: Data-driven. Cite specific numbers. Suggest concrete actions with costs. English only.
-Be concise — 3-5 sentences max. Always actionable.`
-    }
-
-    return `You are KaushalAI's personal career counselor for ${profile.name || 'User'}.
-Full context: ${context}
-Rules: Always personalized. Never generic. Reference real skill names, real job titles, real schemes.
-3-5 sentences unless more detail asked. Hindi if asked in Hindi, English if English.
-Never suggest paid courses. Free resources only (SWAYAM, NPTEL, YouTube, Kaggle).`
-}
 
 const SUGGESTED_PROMPTS = {
     jobseeker: [
@@ -56,7 +25,7 @@ const SUGGESTED_PROMPTS = {
 }
 
 export default function AIChatPanel({ userType = 'jobseeker', isOpen, onClose }) {
-    const { profile, analysis, roadmap, chatHistory, addChatMessage } = useAppStore()
+    const { profile, analysis, roadmap, chatHistory, sendChatMessage } = useAppStore()
     const [input, setInput] = useState('')
     const [loading, setLoading] = useState(false)
     const [contextExpanded, setContextExpanded] = useState(false)
@@ -74,50 +43,9 @@ export default function AIChatPanel({ userType = 'jobseeker', isOpen, onClose })
 
     const sendMessage = async (text) => {
         if (!text.trim() || loading) return
-        const userMsg = { role: 'user', content: text, time: Date.now() }
-        addChatMessage(userMsg)
-        setInput('')
         setLoading(true)
-
-        try {
-            const systemPrompt = buildSystemPrompt(userType, profile, analysis, roadmap)
-            const history = chatHistory.slice(-8)
-
-            let validContents = []
-            for (let msg of history) {
-                const apiRole = msg.role === 'user' ? 'user' : 'model'
-                if (validContents.length > 0 && validContents[validContents.length - 1].role === apiRole) {
-                    validContents[validContents.length - 1].parts[0].text += '\\n' + msg.content
-                } else {
-                    validContents.push({ role: apiRole, parts: [{ text: msg.content }] })
-                }
-            }
-            if (validContents.length > 0 && validContents[validContents.length - 1].role === 'user') {
-                validContents[validContents.length - 1].parts[0].text += '\\n' + text
-            } else {
-                validContents.push({ role: 'user', parts: [{ text: text }] })
-            }
-
-            const res = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    system_instruction: { parts: [{ text: systemPrompt }] },
-                    contents: validContents,
-                    generationConfig: { maxOutputTokens: 400, temperature: 0.7 },
-                }),
-            })
-            const data = await res.json()
-            if (!res.ok) {
-                console.error("Gemini API Error Payload:", data)
-                throw new Error("Gemini API Error: " + (data.error?.message || res.statusText))
-            }
-            const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Maafi chahta hoon, kuch gadbad ho gayi. Please dobara try karein.'
-            addChatMessage({ role: 'assistant', content: reply, time: Date.now() })
-        } catch (e) {
-            console.error("Chat panel error:", e)
-            addChatMessage({ role: 'assistant', content: 'Network error. Please check your connection. (' + e.message + ')', time: Date.now() })
-        }
+        await sendChatMessage(text, userType)
+        setInput('')
         setLoading(false)
     }
 
@@ -182,7 +110,7 @@ export default function AIChatPanel({ userType = 'jobseeker', isOpen, onClose })
             {/* Header */}
             <div className={`flex items-center justify-between p-4 border-b border-slate-700/50 bg-slate-800/80`}>
                 <div className="flex items-center gap-3">
-                    <button 
+                    <button
                         onClick={() => setShowHistory(!showHistory)}
                         className={`p-1.5 rounded-lg transition-all ${showHistory ? 'bg-purple-600/20 text-purple-400' : 'text-slate-500 hover:text-slate-300'}`}
                         title="Chat History"
@@ -198,7 +126,7 @@ export default function AIChatPanel({ userType = 'jobseeker', isOpen, onClose })
                     </div>
                 </div>
                 <div className="flex items-center">
-                    <button 
+                    <button
                         onClick={() => { useAppStore.getState().clearChat() }}
                         className="text-xs text-slate-500 hover:text-red-400 transition-colors mr-2 font-bold uppercase tracking-wider"
                     >
@@ -230,24 +158,24 @@ export default function AIChatPanel({ userType = 'jobseeker', isOpen, onClose })
             ) : (
                 <>
                     {/* Context bar */}
-                    {userType === 'jobseeker' && (
+                    {(userType === 'jobseeker' || userType === 'bluecollar') && (
                         <div className="p-3 border-b border-slate-700/30 bg-slate-800/40">
                             <button className="text-xs text-slate-400 flex items-center gap-1 font-bold" onClick={() => setContextExpanded(!contextExpanded)}>
                                 CONTEXT {contextExpanded ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                             </button>
                             {contextExpanded && (
                                 <div className="flex flex-wrap gap-2 mt-2">
-                                    <span className="text-xs bg-orange-500/20 border border-orange-500/30 text-orange-400 px-2 py-1.5 rounded-xl cursor-not-allowed"
-                                        title="Analysis data linked">
-                                        ❤️ Health: 42
+                                    <span className="text-xs bg-orange-500/20 border border-orange-500/30 text-orange-400 px-2 py-1.5 rounded-xl cursor-default"
+                                        title="Career Health Score">
+                                        ❤️ Health: {analysis?.career_health_score || (userType === 'bluecollar' ? 'Good' : '42')}
                                     </span>
-                                    <span className="text-xs bg-blue-500/20 border border-blue-500/30 text-blue-400 px-2 py-1.5 rounded-xl cursor-not-allowed"
-                                        title="Roadmap data linked">
-                                        📚 Progress: 18%
+                                    <span className="text-xs bg-blue-500/20 border border-blue-500/30 text-blue-400 px-2 py-1.5 rounded-xl cursor-default"
+                                        title="Next Module">
+                                        📚 {roadmap?.current_module || 'Roadmap Active'}
                                     </span>
-                                    <span className="text-xs bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-2 py-1.5 rounded-xl cursor-not-allowed"
-                                        title="Job matching active">
-                                        💼 Match: 85%
+                                    <span className="text-xs bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-2 py-1.5 rounded-xl cursor-default"
+                                        title="Top Job Match">
+                                        💼 {analysis?.career_matches?.[0]?.match_percentage || 85}% Match
                                     </span>
                                 </div>
                             )}

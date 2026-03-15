@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import GlobalBackButton from './components/GlobalBackButton'
 
 // Landing
 import Landing from './pages/Landing'
@@ -41,10 +40,12 @@ function NotFound() {
     )
 }
 
+import LoadingProgress from './components/LoadingProgress'
+
 function App() {
     return (
         <BrowserRouter>
-            <GlobalBackButton />
+            <LoadingProgress />
             <Routes>
                 {/* Landing */}
                 <Route path="/" element={<Landing />} />

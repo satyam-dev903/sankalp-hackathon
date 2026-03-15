@@ -13,14 +13,29 @@ import {
     BarChart2,
     Map as MapIcon,
     Briefcase,
-    MessageSquare
+    MessageSquare,
+    UserCircle
 } from 'lucide-react'
+import ProfileSummary from '../../components/ProfileSummary'
+import ProfileEditor from '../../components/ProfileEditor'
 
 export default function JSDashboard() {
     const navigate = useNavigate()
-    const { profile, analysis, chatOpen, setChatOpen } = useAppStore()
+    const { profile, analysis, chatOpen, setChatOpen, fetchAnalysis } = useAppStore()
+    const [isProfileEditorOpen, setIsProfileEditorOpen] = React.useState(false)
 
-    const name = profile?.name || 'Raju'
+    React.useEffect(() => {
+        if (!analysis?.career_matches?.length) {
+            fetchAnalysis({
+                skills: profile?.skills || ['Excel', 'Communication'],
+                district: profile?.district || 'Jaipur',
+                interests: profile?.interests || ['Data', 'Management']
+            })
+        }
+    }, [fetchAnalysis, analysis, profile])
+
+    const name = profile?.name || 'User'
+    const district = profile?.district || 'Patna'
     const match = analysis?.career_matches?.[0]
     const healthScore = analysis?.career_health_score || 0
 
@@ -53,6 +68,15 @@ export default function JSDashboard() {
                                 <span className="text-sm font-semibold text-slate-500">/100</span>
                             </div>
                         </div>
+                    </div>
+
+                    {/* Profile Summary Section */}
+                    <div className="mb-10">
+                        <ProfileSummary 
+                            userType="jobseeker" 
+                            profile={profile} 
+                            onEdit={() => setIsProfileEditorOpen(true)} 
+                        />
                     </div>
 
                     {/* Section 2 - Stats Row */}
@@ -210,7 +234,19 @@ export default function JSDashboard() {
                 </div>
             </main>
 
-            {chatOpen && <AIChatPanel />}
+            {chatOpen && (
+                <AIChatPanel 
+                    userType="jobseeker" 
+                    isOpen={chatOpen} 
+                    onClose={() => setChatOpen(false)} 
+                />
+            )}
+
+            <ProfileEditor 
+                userType="jobseeker" 
+                isOpen={isProfileEditorOpen} 
+                onClose={() => setIsProfileEditorOpen(false)} 
+            />
         </div>
     )
 }
