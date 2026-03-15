@@ -137,7 +137,7 @@ export default function JSSchemes() {
                         {displaySchemes.map((scheme, idx) => (
                             <div 
                                 key={scheme.id} 
-                                className="glass-card flex flex-col hover:-translate-y-1 hover:border-slate-600 transition-all duration-300 opacity-0 animate-[fade-in-up_0.5s_ease-out_forwards]"
+                                className="glass-card flex flex-col hover:-translate-y-1 hover:border-slate-600 transition-all duration-300 animate-fade-in-up"
                                 style={{ animationDelay: `${idx * 100}ms` }}
                             >
                                 <div className="p-6 flex-1 border-b border-slate-700/50">
@@ -146,7 +146,7 @@ export default function JSSchemes() {
                                             {scheme.emoji ? <span className="text-3xl">{scheme.emoji}</span> : (scheme.icon || <Building2 size={24} />)}
                                         </div>
                                         <div>
-                                            <h3 className="text-lg font-bold text-white leading-tight mb-1">{scheme.title || scheme.name}</h3>
+                                            <h3 className="text-lg font-bold text-white leading-tight mb-1">{scheme.title}</h3>
                                             <p className="text-sm font-semibold text-slate-400">{scheme.ministry}</p>
                                         </div>
                                     </div>

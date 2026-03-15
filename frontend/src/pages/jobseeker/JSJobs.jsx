@@ -186,7 +186,7 @@ export default function JSJobs() {
                             {filteredJobs.map((job, index) => (
                                 <div 
                                     key={job.id} 
-                                    className="glass-card p-6 relative group hover:border-blue-500/40 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-blue-900/10 hover:-translate-y-1 opacity-0 animate-[fade-in-up_0.5s_ease-out_forwards]"
+                                    className="glass-card p-6 relative group hover:border-blue-500/40 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-blue-900/10 hover:-translate-y-1 animate-fade-in-up"
                                     style={{ animationDelay: `${index * 100}ms` }}
                                 >
                                     {/* Urgent Banner */}

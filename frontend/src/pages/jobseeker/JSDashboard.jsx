@@ -47,7 +47,7 @@ export default function JSDashboard() {
                 <div className="max-w-6xl mx-auto space-y-8 pb-20 mt-14 lg:mt-0">
                     
                     {/* Section 1 - Welcome Banner */}
-                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 to-blue-900/40 border border-slate-700/50 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 opacity-0 animate-fade-in shadow-xl">
+                    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 to-blue-900/40 border border-slate-700/50 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 animate-fade-in-up shadow-xl">
                         
                         {/* Subtly animated background pattern */}
                         <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
@@ -80,7 +80,7 @@ export default function JSDashboard() {
                     </div>
 
                     {/* Section 2 - Stats Row */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 opacity-0 animate-fade-in" style={{ animationDelay: '100ms' }}>
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up [animation-delay:100ms]">
                         
                         <div className="stat-card group hover:border-orange-500/30 transition-all duration-300 cursor-pointer" onClick={() => navigate('/health')}>
                             <div className="flex items-center justify-between mb-2">
@@ -129,7 +129,7 @@ export default function JSDashboard() {
                     </div>
 
                     {/* Section 4 - Quick Actions (Placed above matches for better hierarchy) */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 opacity-0 animate-fade-in" style={{ animationDelay: '200ms' }}>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 animate-fade-in-up [animation-delay:200ms]">
                         <button onClick={() => navigate('/analysis')} className="flex flex-col items-center justify-center p-4 rounded-xl bg-slate-800/40 border border-slate-700/50 hover:bg-slate-800 hover:border-blue-500/50 transition-all group active:scale-95">
                             <BarChart2 size={24} className="text-blue-400 mb-2 group-hover:scale-110 transition-transform" />
                             <span className="text-xs font-bold text-slate-300">Analyze Skills</span>
@@ -150,7 +150,7 @@ export default function JSDashboard() {
                     </div>
 
                     {/* Section 3 - Top Career Matches */}
-                    <div className="opacity-0 animate-fade-in" style={{ animationDelay: '300ms' }}>
+                    <div className="animate-fade-in-up [animation-delay:300ms]">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-1.5 h-6 bg-blue-500 rounded-full" />
                             <h2 className="text-lg font-bold text-white tracking-tight">Top Career Matches</h2>
@@ -193,7 +193,7 @@ export default function JSDashboard() {
                     </div>
 
                     {/* Section 5 - Skill Gap Snapshot */}
-                    <div className="opacity-0 animate-fade-in" style={{ animationDelay: '400ms' }}>
+                    <div className="animate-fade-in-up [animation-delay:400ms]">
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-1.5 h-6 bg-purple-500 rounded-full" />
                             <h2 className="text-lg font-bold text-white tracking-tight">Skill Gap Snapshot</h2>

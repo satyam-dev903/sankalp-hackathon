@@ -44,60 +44,99 @@ const useAppStore = create((set, get) => ({
       })
       const data = await resp.json()
       
+      // Ensure data structure is flat if backend nesting is unexpected
+      const finalAnalysis = {
+        ...data,
+        career_health_score: data.career_health_score || 0,
+        career_matches: data.career_matches || [],
+        skill_gaps: data.skill_gaps || [],
+        latent_skills: data.latent_skills || []
+      }
+
       set({ 
-        analysis: data, 
-        roadmap: data.roadmap || get().roadmap,
+        analysis: finalAnalysis, 
+        roadmap: data.roadmap || finalAnalysis.roadmap || get().roadmap,
         loading: false 
       })
       
     } catch (err) {
       console.error('Failed to fetch analysis:', err)
-      // Robust fallback for demo - Role-specific
-      const isDriver = (get().profile?.skills || []).some(s => s.toLowerCase().includes('drive')) || 
-                       (get().profile?.name?.toLowerCase().includes('driver'));
       
-      const fallbackAnalysis = isDriver ? {
-        career_health_score: 65,
-        career_matches: [
-          { career_title: "Heavy Truck Driver", match_percentage: 92, salary_today: 18000, salary_3_years: 35000, missing_skills: ["Navigation Tech", "Safety Safety"], automation_risk: 15 },
-          { career_title: "Logistics Coordinator", match_percentage: 70, salary_today: 22000, salary_3_years: 45000, missing_skills: ["Basic Computer"], automation_risk: 30 }
-        ],
-        skill_gaps: [
-          { skill_name: "Advanced Route Optimization", salary_impact: 5000, weeks_to_learn: 2, demand_trajectory: "RISING" },
-          { skill_name: "EV Charging Infrastructure", salary_impact: 8000, weeks_to_learn: 3, demand_trajectory: "EMERGING" }
-        ],
-        genome_shortcut: { message: "Your 5 years of experience saves you 4 weeks on 'Safety Protocols' module.", saved_weeks: 4 }
-      } : {
-        career_health_score: 42,
-        career_matches: [
-          { career_title: "Data Analyst", match_percentage: 85, salary_today: 35000, salary_3_years: 75000, missing_skills: ["SQL", "Python"], automation_risk: 12 },
-          { career_title: "MIS Executive", match_percentage: 92, salary_today: 28000, salary_3_years: 45000, missing_skills: ["Advanced Excel"], automation_risk: 45 }
-        ],
-        skill_gaps: [
-          { skill_name: "SQL Database Control", salary_impact: 12000, weeks_to_learn: 4, demand_trajectory: "EMERGING" },
-          { skill_name: "Python for Automation", salary_impact: 18000, weeks_to_learn: 8, demand_trajectory: "RISING" }
-        ],
-        genome_shortcut: { message: "Excel proficiency detected. Bypassing introductory modules. Save 3 weeks.", saved_weeks: 3 }
-      };
+      // Robust fallback for demo - Role-specific (Rahul or Driver)
+      const currentProfile = get().userType === 'bluecollar' ? get().bcProfile : get().profile;
+      const skills = currentProfile?.skills || [];
+      const name = currentProfile?.name || '';
 
-      const fallbackRoadmap = isDriver ? {
-        current_week: 1,
-        progress_percentage: 15,
-        modules: [
-          { id: "m1", title: "Defensive Driving & Safety", week: 1, status: "current", resources: ["Safety First PDF", "Eco-Driving Tips Video"] },
-          { id: "m2", title: "Route Planning Tools", week: 2, status: "locked", resources: ["Google Maps for Business"] },
-          { id: "m3", title: "EV Logistics Basics", week: 3, status: "locked", resources: ["Charging Networks Intro"] }
-        ]
-      } : {
-        current_week: 3,
-        progress_percentage: 45,
-        modules: [
-          { id: "m1", title: "Data Visualization Basics", week: 1, status: "completed", resources: ["Excel Charts Mastery"] },
-          { id: "m2", title: "Advanced Formulas", week: 2, status: "completed", resources: ["VLOOKUP to XLOOKUP"] },
-          { id: "m3", title: "Intro to SQL", week: 3, status: "current", resources: ["Select Queries Video", "SQLBolt Interactive"] },
-          { id: "m4", title: "Data Cleaning with Python", week: 4, status: "locked", resources: ["Pandas Intro"] }
-        ]
-      };
+      const isDriver = skills.some(s => s.toLowerCase().includes('drive')) || 
+                       name.toLowerCase().includes('driver') ||
+                       (get().bcProfile?.job_role?.toLowerCase().includes('driver'));
+      
+      const isDataAnalyst = name.toLowerCase().includes('rahul') ||
+                            skills.some(s => s.toLowerCase().includes('data') || s.toLowerCase().includes('analyst'));
+
+      let fallbackAnalysis;
+      let fallbackRoadmap;
+      
+      if (isDataAnalyst) {
+        fallbackAnalysis = {
+          career_health_score: 78,
+          career_matches: [
+            { career_title: "Data Analyst", match_percentage: 92, salary_today: 35000, salary_3_years: 75000, automation_risk: 15, missing_skills: ["Python", "SQL"] },
+            { career_title: "MIS Executive", match_percentage: 88, salary_today: 25000, salary_3_years: 48000, automation_risk: 35, missing_skills: ["Advanced Excel"] },
+            { career_title: "Business Intelligence", match_percentage: 75, salary_today: 45000, salary_3_years: 95000, automation_risk: 10, missing_skills: ["Power BI", "Tableau"] }
+          ],
+          skill_gaps: [
+            { skill_name: "Python for Data", salary_impact: 15000, weeks_to_learn: 4, demand_trajectory: "RISING" },
+            { skill_name: "SQL Advanced", salary_impact: 12000, weeks_to_learn: 3, demand_trajectory: "EMERGING" }
+          ],
+          latent_skills: [{ skill_name: "Pattern Recognition", reason: "Excel work indicates latent data intuition" }],
+          genome_shortcut: { message: "Excel proficiency detected. Bypassing basics.", saved_weeks: 2 }
+        };
+        fallbackRoadmap = {
+          current_week: 1,
+          progress_percentage: 33,
+          modules: [
+            { id: "m1", title: "Data Fundamentals", week: 1, status: "completed", resources: ["Intro to Data PDF"] },
+            { id: "m2", title: "SQL Mastery", week: 2, status: "current", resources: ["SQLBolt", "W3Schools SQL"] },
+            { id: "m3", title: "Visual Analytics", week: 3, status: "locked", resources: ["Tableau Basics"] }
+          ]
+        };
+      } else if (isDriver) {
+        fallbackAnalysis = {
+          career_health_score: 65,
+          career_matches: [
+            { career_title: "Heavy Vehicle Driver", match_percentage: 95, salary_today: 22000, salary_3_years: 38000, automation_risk: 5, missing_skills: ["Logistics Basic"] },
+            { career_title: "Fleet Coordinator", match_percentage: 70, salary_today: 18000, salary_3_years: 28000, automation_risk: 25, missing_skills: ["Computer Basics"] }
+          ],
+          skill_gaps: [
+            { skill_name: "Advanced Logistics", salary_impact: 5000, weeks_to_learn: 2, demand_trajectory: "STABLE" }
+          ],
+          latent_skills: [{ skill_name: "Route Optimization", reason: "Experienced city driving" }],
+          genome_shortcut: { message: "Verified license detected. Skipping safety intro.", saved_weeks: 1 }
+        };
+        fallbackRoadmap = {
+          current_week: 1,
+          progress_percentage: 20,
+          modules: [
+            { id: "m1", title: "Professional Safety", week: 1, status: "completed", resources: ["Traffic Safety Doc"] },
+            { id: "m2", title: "Vehicle Maintenance", week: 2, status: "current", resources: ["Engine Basics Video"] },
+            { id: "m3", title: "Logistics Software", week: 3, status: "locked", resources: ["Fleet App Manual"] }
+          ]
+        };
+      } else {
+        fallbackAnalysis = {
+          career_health_score: 50,
+          career_matches: [{ career_title: "General Service", match_percentage: 60, salary_today: 15000, salary_3_years: 22000, automation_risk: 40 }],
+          skill_gaps: [{ skill_name: "Digital Literacy", salary_impact: 3000, weeks_to_learn: 2, demand_trajectory: "STABLE" }],
+          latent_skills: [],
+          genome_shortcut: null
+        };
+        fallbackRoadmap = {
+          current_week: 1,
+          progress_percentage: 0,
+          modules: [{ id: "m1", title: "Basic Skillset", week: 1, status: "current", resources: ["Skill Overview"] }]
+        };
+      }
 
       set({ 
         analysis: fallbackAnalysis,
@@ -170,11 +209,12 @@ const useAppStore = create((set, get) => ({
       // Transform backend data to match frontend property names
       const transformedJobs = (data.jobs || []).map(j => ({
         ...j,
-        role: j.title,
-        location: j.district,
-        skills: j.required_skills || [],
-        match: j.match_percentage || 85,
-        type: j.job_type || 'Full-time'
+        role: j.role || j.title,
+        company: j.company || 'Unknown Company',
+        location: j.location || j.district,
+        skills: j.skills || j.required_skills || [],
+        match: j.match || j.match_percentage || 85,
+        type: j.type || j.job_type || 'Full-time'
       }))
       
       set({ jobs: transformedJobs })
@@ -191,8 +231,10 @@ const useAppStore = create((set, get) => ({
       
       const transformedSchemes = (data.schemes || []).map(s => ({
         ...s,
-        title: s.name, // Map name to title
-        icon: s.emoji || s.icon // Ensure icon exists
+        title: s.title || s.name, 
+        description: s.description || s.benefit || 'Government support scheme',
+        icon: s.icon || s.emoji || '🏛️',
+        benefit: s.benefit || s.benefit_hindi || 'Direct Support'
       }))
       
       set({ schemes: transformedSchemes })

@@ -123,11 +123,11 @@ export default function JSAnalysis() {
                         
                         {/* Section 1 - Career Health Score Column */}
                         <div className="lg:col-span-4 space-y-6">
-                            <div className="glass-card p-6 flex flex-col items-center opacity-0 animate-[fade-in-up_0.6s_ease-out_forwards]">
+                            <div className="glass-card p-6 flex flex-col items-center animate-fade-in-up">
                                 <CircularGauge score={score} />
                             </div>
 
-                            <div className="glass-card p-6 opacity-0 animate-[fade-in-up_0.6s_ease-out_0.2s_forwards]">
+                            <div className="glass-card p-6 animate-fade-in-up [animation-delay:200ms]">
                                 <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-5 pb-2 border-b border-slate-700/50">Score Breakdown</h3>
                                 <ProgressRow label="Skill Demand Match" score={8} max={20} color="bg-blue-500" />
                                 <ProgressRow label="Skill Diversification" score={10} max={20} color="bg-blue-500" />
@@ -138,7 +138,7 @@ export default function JSAnalysis() {
 
                             {/* Section 4 - Hidden Strengths Banner */}
                             {(analysis.genome_shortcut || (roadmap && roadmap.genome_shortcut)) && (
-                                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600/20 to-orange-900/40 border border-amber-500/30 p-6 opacity-0 animate-[fade-in-up_0.6s_ease-out_0.3s_forwards] group cursor-pointer hover:border-amber-400/50 transition-colors" onClick={() => navigate('/roadmap')}>
+                                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600/20 to-orange-900/40 border border-amber-500/30 p-6 animate-fade-in-up [animation-delay:300ms] group cursor-pointer hover:border-amber-400/50 transition-colors" onClick={() => navigate('/roadmap')}>
                                     <div className="absolute top-0 right-0 -mr-4 -mt-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                         <Zap size={100} className="text-amber-500" />
                                     </div>
@@ -164,7 +164,7 @@ export default function JSAnalysis() {
                         <div className="lg:col-span-8 space-y-6">
                             
                             {/* Section 2 - Career Matches Table */}
-                            <div className="glass-card overflow-hidden opacity-0 animate-[fade-in-up_0.6s_ease-out_0.4s_forwards]">
+                            <div className="glass-card overflow-hidden animate-fade-in-up [animation-delay:400ms]">
                                 <div className="p-6 border-b border-slate-700/50 flex items-center justify-between">
                                     <div>
                                         <h2 className="text-lg font-bold text-white">Career Matches</h2>
@@ -219,7 +219,7 @@ export default function JSAnalysis() {
                             </div>
 
                             {/* Section 3 - Skill Gaps */}
-                            <div className="opacity-0 animate-[fade-in-up_0.6s_ease-out_0.5s_forwards]">
+                            <div className="animate-fade-in-up [animation-delay:500ms]">
                                 <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                                     <Zap size={18} className="text-purple-400" /> Highest Value Skill Gaps
                                 </h2>

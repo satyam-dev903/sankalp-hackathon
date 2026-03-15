@@ -124,7 +124,7 @@ export default function JSRoadmap() {
                 <div className="max-w-4xl mx-auto space-y-8 pb-32 mt-14 lg:mt-0">
                     
                     {/* Top Bar */}
-                    <div className="glass-card p-6 border-b-4 border-b-blue-500 opacity-0 animate-[fade-in-up_0.6s_ease-out_forwards]">
+                    <div className="glass-card p-6 border-b-4 border-b-blue-500 animate-fade-in-up">
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                             <div>
                                 <h1 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
@@ -182,7 +182,7 @@ export default function JSRoadmap() {
                             const isLocked = module.status === 'locked' || module.status === 'custom' // Custom treated as locked for UI if not current
                             
                             return (
-                                <div key={module.id} className={`relative flex items-start gap-6 group transition-all duration-500 opacity-0 animate-[fade-in-up_0.6s_ease-out_forwards] ${isLocked ? 'opacity-40 grayscale-[50%]' : ''}`} style={{ animationDelay: `${(i+1)*150}ms` }}>
+                                <div key={module.id} className={`relative flex items-start gap-6 group transition-all duration-500 animate-fade-in-up ${isLocked ? 'opacity-40 grayscale-[50%]' : ''}`} style={{ animationDelay: `${(i+1)*150}ms` }}>
                                     
                                     {/* Timeline Dot */}
                                     <div className={`absolute -left-[1.3rem] md:-left-[0.8rem] w-5 h-5 rounded-full border-4 border-[#0F172A] z-10 transition-colors duration-300
@@ -235,7 +235,7 @@ export default function JSRoadmap() {
                     </div>
 
                     {/* Add Custom Module Form */}
-                    <div className="pt-6 border-t border-slate-700/50 opacity-0 animate-[fade-in-up_0.6s_ease-out_1s_forwards]">
+                    <div className="pt-6 border-t border-slate-700/50 animate-fade-in-up [animation-delay:1s]">
                         {!showAddForm ? (
                             <button 
                                 onClick={() => setShowAddForm(true)}

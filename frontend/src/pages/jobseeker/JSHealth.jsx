@@ -77,7 +77,7 @@ function HealthGauge({ score }) {
             </div>
             
             {/* Recommendation Pill */}
-            <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 animate-[fade-in-up_0.5s_ease-out_0.5s_forwards] opacity-0 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+            <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 animate-fade-in-up [animation-delay:500ms] shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                 <Zap size={14} className="animate-pulse" /> Add SQL → score jumps to 61 in 6 weeks <ArrowRight size={14} />
             </div>
         </div>
@@ -161,11 +161,11 @@ export default function JSHealth() {
                         
                         {/* Left Column: Gauge & Sub-scores */}
                         <div className="space-y-8">
-                            <div className="glass-card p-8 flex flex-col items-center justify-center min-h-[300px] opacity-0 animate-[fade-in-up_0.6s_ease-out_forwards]">
+                            <div className="glass-card p-8 flex flex-col items-center justify-center min-h-[300px] animate-fade-in-up">
                                 <HealthGauge score={score} />
                             </div>
 
-                            <div className="glass-card p-6 opacity-0 animate-[fade-in-up_0.6s_ease-out_0.2s_forwards]">
+                            <div className="glass-card p-6 animate-fade-in-up [animation-delay:200ms]">
                                 <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-6 pb-2 border-b border-slate-700/50">Score Breakdown</h3>
                                 <div>
                                     {subScores.map((sub, i) => (
@@ -186,7 +186,7 @@ export default function JSHealth() {
                         <div className="space-y-8">
                             
                             {/* Prediction Card */}
-                            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-emerald-500/30 p-1 opacity-0 animate-[fade-in-up_0.6s_ease-out_0.3s_forwards] group">
+                            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-emerald-500/30 p-1 animate-fade-in-up [animation-delay:300ms] group">
                                 {/* Gradient animated border effect */}
                                 <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-emerald-300 to-blue-500 animate-[spin_4s_linear_infinite] opacity-20 group-hover:opacity-40 transition-opacity" />
                                 
@@ -237,7 +237,7 @@ export default function JSHealth() {
                             </div>
 
                             {/* Risk Cards */}
-                            <div className="opacity-0 animate-[fade-in-up_0.6s_ease-out_0.4s_forwards]">
+                            <div className="animate-fade-in-up [animation-delay:400ms]">
                                 <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <AlertTriangle size={16} className="text-rose-500" /> Top Risk Factors
                                 </h3>
