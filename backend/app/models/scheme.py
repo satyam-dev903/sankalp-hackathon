@@ -20,5 +20,6 @@ class Scheme(Base):
     apply_url: Mapped[str] = mapped_column(String(500))
     deadline: Mapped[datetime | None] = mapped_column(DateTime)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    category: Mapped[str | None] = mapped_column(String(50))
     color: Mapped[str] = mapped_column(String(20), default="blue")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

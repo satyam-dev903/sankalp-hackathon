@@ -20,5 +20,6 @@ class Job(Base):
     job_type: Mapped[str | None] = mapped_column(String(100), default="Full-time")
     is_urgent: Mapped[bool] = mapped_column(Boolean, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    category: Mapped[str | None] = mapped_column(String(50))
     apply_url: Mapped[str | None] = mapped_column(String(500))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

@@ -203,7 +203,7 @@ const useAppStore = create((set, get) => ({
   fetchJobs: async (district) => {
     try {
       const targetDistrict = district || get().profile?.district || 'Patna'
-      const resp = await fetch(`${API_BASE}/jobseeker/jobs?district=${targetDistrict}`)
+      const resp = await fetch(`${API_BASE}/jobseeker/jobs?district=${targetDistrict}&category=white-collar`)
       const data = await resp.json()
       
       // Transform backend data to match frontend property names
@@ -226,7 +226,7 @@ const useAppStore = create((set, get) => ({
   schemes: [],
   fetchSchemes: async () => {
     try {
-      const resp = await fetch(`${API_BASE}/jobseeker/schemes`)
+      const resp = await fetch(`${API_BASE}/jobseeker/schemes?category=white-collar`)
       const data = await resp.json()
       
       const transformedSchemes = (data.schemes || []).map(s => ({
@@ -247,7 +247,7 @@ const useAppStore = create((set, get) => ({
   fetchBcJobs: async (district) => {
     try {
       const targetDistrict = district || get().bcProfile?.district || 'Lucknow'
-      const resp = await fetch(`${API_BASE}/jobseeker/jobs?district=${targetDistrict}`)
+      const resp = await fetch(`${API_BASE}/jobseeker/jobs?district=${targetDistrict}&category=blue-collar`)
       const data = await resp.json()
       
       // Transform backend data to match frontend property names
@@ -269,7 +269,7 @@ const useAppStore = create((set, get) => ({
   bcSchemes: [],
   fetchBcSchemes: async () => {
     try {
-      const resp = await fetch(`${API_BASE}/jobseeker/schemes`)
+      const resp = await fetch(`${API_BASE}/jobseeker/schemes?category=blue-collar`)
       const data = await resp.json()
       
       const transformedSchemes = (data.schemes || []).map(s => ({
