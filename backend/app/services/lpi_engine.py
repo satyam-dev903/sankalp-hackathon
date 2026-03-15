@@ -1,7 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func
 from app.models.skill import SkillDemand
-from app.models.job import Job
 from typing import Optional
 
 DISTRICT_MEDIAN_SALARY = {

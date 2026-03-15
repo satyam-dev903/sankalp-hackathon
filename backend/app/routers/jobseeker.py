@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.database import get_db
-from app.models.job import Job
-from app.models.scheme import Scheme
+from app.models.job import JSJob, BCJob
+from app.models.scheme import JSScheme, BCScheme
 from app.schemas.job import JobListResponse
 from app.schemas.scheme import SchemeListResponse
 from app.services.gemini import analyze_profile
@@ -30,24 +30,23 @@ FALLBACK_JOBS = [
 @router.get("/jobs", response_model=JobListResponse)
 async def get_jobs(district: str = "Patna", category: str = "white-collar", db: AsyncSession = Depends(get_db)):
     try:
-        # Filter by district and category
-        query = select(Job).where(Job.is_active == True)
+        # Determine target model based on category
+        model = BCJob if category == "blue-collar" else JSJob
+        
+        query = select(model).where(model.is_active == True)
         if district:
-            query = query.where(Job.district.ilike(f"%{district}%"))
-        if category:
-            query = query.where(Job.category == category)
+            query = query.where(model.district.ilike(f"%{district}%"))
             
         result = await db.execute(query)
         jobs = result.scalars().all()
         
         if not jobs:
-            # Fallback filtering
+            # Fallback logic
             filtered = [j for j in FALLBACK_JOBS if (not district or district.lower() in j["district"].lower())]
-            # Simple keyword separation for fallback if real DB empty
             if category == "white-collar":
                 filtered = [j for j in filtered if "analyst" in j["title"].lower() or "mis" in j["title"].lower()]
             elif category == "blue-collar":
-                filtered = [j for j in filtered if "driver" in j["title"].lower() or "plumber" in j["title"].lower() or "delivery" in j["title"].lower()]
+                filtered = [j for j in filtered if "driver" in j["title"].lower() or "plumber" in j["title"].lower()]
             
             return {"jobs": filtered or FALLBACK_JOBS[:2]}
             
@@ -72,20 +71,19 @@ async def get_jobs(district: str = "Patna", category: str = "white-collar", db: 
 @router.get("/schemes", response_model=SchemeListResponse)
 async def get_schemes(category: str = "white-collar", db: AsyncSession = Depends(get_db)):
     try:
-        query = select(Scheme).where(Scheme.is_active == True)
-        if category:
-            query = query.where(Scheme.category == category)
-            
+        # Determine target model based on category
+        model = BCScheme if category == "blue-collar" else JSScheme
+        
+        query = select(model).where(model.is_active == True)
         result = await db.execute(query)
         schemes = result.scalars().all()
         
         if not schemes:
-            # Fallback filtering
             filtered = FALLBACK_SCHEMES
             if category == "white-collar":
                 filtered = [s for s in FALLBACK_SCHEMES if "drive" not in s["name"].lower()]
             elif category == "blue-collar":
-                filtered = [s for s in FALLBACK_SCHEMES if "drive" in s["name"].lower() or "mudra" in s["name"].lower()]
+                filtered = [s for s in FALLBACK_SCHEMES if "drive" in s["name"].lower()]
             return {"schemes": filtered}
             
         return {"schemes": [
