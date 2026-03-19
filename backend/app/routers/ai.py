@@ -45,7 +45,7 @@ async def chat(data: dict):
     
     contents.append({"role": "user", "parts": [{"text": message}]})
     
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={settings.gemini_api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={settings.gemini_api_key}"
     
     payload = {
         "contents": contents,
@@ -82,7 +82,7 @@ async def enhance_profile(data: dict):
         prompt = f"""Generate a professional career summary for a job seeker: {json.dumps(profile_data)}. 
         Include key skills and goals. Tone: Professional and enthusiastic. Max 25 words."""
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={settings.gemini_api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={settings.gemini_api_key}"
     
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
@@ -121,7 +121,7 @@ async def interview(data: dict):
     if message:
         contents.append({"role": "user", "parts": [{"text": message}]})
     
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key={settings.gemini_api_key}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={settings.gemini_api_key}"
     
     payload = {
         "contents": contents,

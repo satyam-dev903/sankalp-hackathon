@@ -2,17 +2,15 @@ import httpx
 import json
 from app.config import settings
 
-MODEL = "gemini-flash-latest" 
+MODEL = "gemini-2.5-flash" 
 
-async def analyze_profile(skills, district, education, exp_years):
+async def analyze_profile(profile_data, skills, district, education, exp_years):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent?key={settings.gemini_api_key}"
     
     prompt = f"""
     Analyze this user profile for KaushalBridge AI:
-    Skills: {skills}
-    District: {district}
-    Education: {education}
-    Exp: {exp_years} years
+    Full Profile JSON: {json.dumps(profile_data) if profile_data else {}}
+    Fallback Info - Skills: {skills}, District: {district}, Education: {education}, Exp: {exp_years}
     
     Return a JSON object with:
     - career_health_score (0-100)

@@ -3,6 +3,526 @@
 
 ---
 
+## ═══════════════════════════════════════════════════
+## SECTION 0 — PREMIUM UI/UX DESIGN BIBLE
+## Read this before writing a single line of code.
+## ═══════════════════════════════════════════════════
+
+### AESTHETIC DIRECTION: "Dark Sovereign" — Industrial Glassmorphism
+
+This app serves two ends of India's workforce — a mason in Sitapur and a graduate in Nagpur.
+The design must feel: **trustworthy, powerful, and premium** — like a ₹500-crore government-backed
+product, not a startup side project. Think Bloomberg Terminal meets India Stack — dark, data-dense,
+yet deeply human.
+
+**One-line design brief:**
+> "The UI that a District Collector, a B.Com graduate, and a plumber from UP all open and immediately trust."
+
+---
+
+### VISUAL IDENTITY SYSTEM
+
+#### 1. BACKGROUNDS — Layered Depth (Not Flat Dark)
+
+Every page must have 3 visual layers:
+
+**Layer 1 — Base:** Near-black gradient
+```css
+background: linear-gradient(135deg, #030712 0%, #0a0f1e 50%, #030712 100%);
+```
+
+**Layer 2 — Ambient glow blobs (position: fixed, pointer-events: none, z-index: 0):**
+```css
+/* Blue glow — top left */
+.glow-blob-1 {
+  position: fixed; top: -20%; left: -10%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none; z-index: 0;
+}
+/* Purple glow — bottom right */
+.glow-blob-2 {
+  position: fixed; bottom: -20%; right: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none; z-index: 0;
+}
+/* Emerald glow — center right (BC pages only) */
+.glow-blob-emerald {
+  background: radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%);
+}
+```
+
+**Layer 3 — Noise texture overlay:**
+```css
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.4;
+}
+```
+
+---
+
+#### 2. GLASSMORPHIC CARDS — The Core Visual Unit
+
+Every card in this app must use one of these 3 glass tiers:
+
+**Tier 1 — Primary Card (main content cards):**
+```css
+.glass-card-primary {
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 16px;
+  box-shadow: 
+    0 4px 24px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  position: relative;
+  overflow: hidden;
+}
+/* Subtle inner highlight at top */
+.glass-card-primary::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+}
+```
+
+**Tier 2 — Feature Card (stat cards, job cards, scheme cards):**
+```css
+.glass-card-feature {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-card-feature:hover {
+  background: rgba(30, 41, 59, 0.8);
+  border-color: rgba(148, 163, 184, 0.18);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(59,130,246,0.1);
+}
+```
+
+**Tier 3 — Overlay Card (modals, panels, sidebars):**
+```css
+.glass-card-overlay {
+  background: rgba(8, 14, 28, 0.92);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 25px 80px rgba(0,0,0,0.7);
+}
+```
+
+---
+
+#### 3. WORKFORCE IMAGERY — The Soul of the Design
+
+**This is the most important differentiator.** Generic SaaS dashboards have zero human imagery.
+KaushalBridge must feel alive with the real people it serves.
+
+**Use Unsplash free images via direct URL in CSS/JSX. Approved image categories:**
+
+```jsx
+// ── HERO & LANDING ─────────────────────────────────
+// Indian construction workers (blue collar)
+const IMG_CONSTRUCTION = "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1200&q=80"
+// Indian office/graduates
+const IMG_GRADUATES = "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&q=80"
+// Indian skill training
+const IMG_TRAINING = "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80"
+// District government office
+const IMG_GOVT = "https://images.unsplash.com/photo-1568992687947-868a62a9f521?w=800&q=80"
+// Electrician at work
+const IMG_ELECTRICIAN = "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&q=80"
+// Data analyst at laptop
+const IMG_ANALYST = "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80"
+// Welder working
+const IMG_WELDER = "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&q=80"
+// Plumber working
+const IMG_PLUMBER = "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&q=80"
+```
+
+**How to use images in cards (NOT as plain <img> — as background with overlay):**
+```jsx
+// Workforce card with image background + glass overlay text
+<div className="relative rounded-2xl overflow-hidden h-48 group">
+  {/* Background image */}
+  <div 
+    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+    style={{ backgroundImage: `url(${IMG_ELECTRICIAN})` }}
+  />
+  {/* Dark gradient overlay — so text stays readable */}
+  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/95 via-slate-900/60 to-slate-900/20" />
+  {/* Glass content panel at bottom */}
+  <div className="absolute bottom-0 left-0 right-0 p-4 backdrop-blur-sm">
+    <span className="text-xs text-blue-400 font-medium uppercase tracking-wider">Electrician</span>
+    <h3 className="text-white font-bold text-lg">340 Jobs Open in Nagpur</h3>
+    <p className="text-slate-300 text-sm">Average ₹18,000/month</p>
+  </div>
+</div>
+```
+
+**Where to place images — mandatory locations:**
+
+| Page/Section | Image to Use | Placement |
+|---|---|---|
+| Landing Hero | Mix of construction + graduate | Full-width background behind hero text, 5% opacity |
+| Landing Platform Cards | IMG_CONSTRUCTION, IMG_ANALYST, IMG_GOVT | Card background with gradient overlay |
+| JSDashboard — welcome banner | IMG_ANALYST | Right side of banner, faded |
+| JSJobs — job cards | Trade-relevant images | Card header strip (80px height) |
+| BCDashboard — action tiles | Worker images | Background of each tile |
+| BCOnboarding — trade cards | Worker images per trade | Card background, 30% opacity |
+| GovtLogin — left panel | IMG_GOVT | Full panel background |
+| GovtDashboard — top banner | District/workers | Banner background |
+
+---
+
+#### 4. TYPOGRAPHY SYSTEM
+
+```css
+/* Import in index.css — replace existing import */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Apply globally */
+body { font-family: 'Outfit', system-ui, sans-serif; }
+code, .font-mono { font-family: 'JetBrains Mono', monospace; }
+```
+
+**Type Scale:**
+```
+Display (hero headings):  font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 800; letter-spacing: -0.03em;
+Page title:               text-3xl font-bold tracking-tight text-white
+Section header:           text-xl font-semibold text-white
+Card title:               text-base font-semibold text-slate-100
+Body text:                text-sm font-normal text-slate-300 leading-relaxed
+Caption:                  text-xs font-medium text-slate-500 tracking-wide uppercase
+Data/numbers:             font-mono text-white font-medium (for scores, counts)
+Hindi text:               font-medium (weight 500+), slightly larger (text-base minimum)
+```
+
+**Number styling (scores, stats, percentages):**
+```jsx
+// Premium number display — use for all scores and stats
+<span className="font-mono text-4xl font-bold text-white tabular-nums">42</span>
+<span className="text-slate-400 font-mono text-xl">/100</span>
+```
+
+---
+
+#### 5. ACCENT COLORS WITH GLOW
+
+Each theme has a glowing accent treatment:
+
+```css
+/* Job Seeker — Blue */
+.accent-blue {
+  color: #60a5fa;
+  text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+}
+.border-accent-blue {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1), inset 0 0 20px rgba(59, 130, 246, 0.03);
+}
+
+/* Blue Collar — Emerald */
+.accent-emerald {
+  color: #34d399;
+  text-shadow: 0 0 20px rgba(52, 211, 153, 0.4);
+}
+
+/* Government — Purple */
+.accent-purple {
+  color: #a78bfa;
+  text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+}
+
+/* Alert/Score — Orange */
+.accent-orange {
+  color: #fb923c;
+  text-shadow: 0 0 20px rgba(251, 146, 60, 0.4);
+}
+```
+
+---
+
+#### 6. PREMIUM BUTTON SYSTEM
+
+```css
+/* Primary action button */
+.btn-premium-blue {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+  color: white; font-weight: 600; border-radius: 10px;
+  padding: 10px 24px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative; overflow: hidden;
+}
+.btn-premium-blue::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+}
+.btn-premium-blue:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-premium-blue:active { transform: translateY(0); }
+
+/* Ghost button */
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #94a3b8; font-weight: 500; border-radius: 10px;
+  padding: 10px 24px;
+  transition: all 0.2s ease;
+}
+.btn-ghost:hover {
+  border-color: rgba(148, 163, 184, 0.4);
+  color: white; background: rgba(148, 163, 184, 0.05);
+}
+```
+
+---
+
+#### 7. DATA VISUALIZATION COMPONENTS (CSS-only, no chart library)
+
+**Premium progress bar:**
+```jsx
+// Use for ALL progress bars, skill scores, ATS scores
+const PremiumBar = ({ value, max = 100, color = 'blue', label, sublabel }) => (
+  <div className="space-y-1.5">
+    <div className="flex justify-between items-center">
+      <span className="text-sm text-slate-300 font-medium">{label}</span>
+      <span className="font-mono text-sm font-bold text-white">{value}<span className="text-slate-500 font-normal">/{max}</span></span>
+    </div>
+    <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+      <div 
+        className={`h-full rounded-full transition-all duration-1000 ease-out`}
+        style={{ 
+          width: `${(value/max)*100}%`,
+          background: color === 'blue' 
+            ? 'linear-gradient(90deg, #1d4ed8, #60a5fa)' 
+            : color === 'emerald' 
+            ? 'linear-gradient(90deg, #059669, #34d399)'
+            : 'linear-gradient(90deg, #ea580c, #fb923c)',
+          boxShadow: `0 0 10px ${color === 'blue' ? 'rgba(96,165,250,0.5)' : color === 'emerald' ? 'rgba(52,211,153,0.5)' : 'rgba(251,146,60,0.5)'}`
+        }} 
+      />
+    </div>
+    {sublabel && <p className="text-xs text-slate-500">{sublabel}</p>}
+  </div>
+)
+```
+
+**SVG Circular score gauge:**
+```jsx
+const CircleGauge = ({ score, max = 100, size = 180, color = '#3b82f6' }) => {
+  const radius = (size - 20) / 2
+  const circumference = 2 * Math.PI * radius
+  const filled = circumference - (score / max) * circumference
+  return (
+    <div className="relative" style={{ width: size, height: size }}>
+      <svg width={size} height={size} className="rotate-[-90deg]">
+        {/* Track */}
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#1e293b" strokeWidth="10" />
+        {/* Fill */}
+        <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke={color} strokeWidth="10"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={filled}
+          style={{ filter: `drop-shadow(0 0 8px ${color}80)`, transition: 'stroke-dashoffset 1.2s cubic-bezier(0.34, 1.56, 0.64, 1)' }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="font-mono text-4xl font-black text-white">{score}</span>
+        <span className="text-slate-500 text-sm font-mono">/{max}</span>
+      </div>
+    </div>
+  )
+}
+```
+
+---
+
+#### 8. SIDEBAR DESIGN — Premium Left Rail
+
+```jsx
+// Sidebar must look like this:
+// ┌─────────────────────────────┐
+// │  ⚡ KaushalAI               │  ← Logo row, blue glow on ⚡
+// │  ─────────────────────────  │  ← 1px divider
+// │  ○ Dashboard         ←active│  ← Active: blue-600/15 bg + left border
+// │  ○ Career Analysis          │
+// │  ○ Learning Roadmap         │
+// │  ○ Job Matches              │
+// │  ○ Schemes                  │
+// │  ○ Career Health            │
+// │  ○ Resume AI                │
+// │  ○ Mock Interview           │
+// │                             │
+// │  ─────────────────────────  │
+// │  ┌──────────────────────┐   │  ← AI Chat button: glass card
+// │  │  🤖 Ask KaushalAI   │   │
+// │  └──────────────────────┘   │
+// │  ─────────────────────────  │
+// │  [Avatar] User Name    ⋮    │  ← User mini-card at bottom
+// └─────────────────────────────┘
+
+// CSS:
+// background: rgba(5, 10, 22, 0.95)
+// backdrop-filter: blur(40px)
+// border-right: 1px solid rgba(148, 163, 184, 0.08)
+// width: 240px (lg+), slides in on mobile
+```
+
+---
+
+#### 9. PAGE-SPECIFIC DESIGN MANDATES
+
+**Landing Page — Already exists, enhance these:**
+- Hero section: workforce collage image at 8% opacity as full-background layer behind text
+- The 3 platform cards MUST have image backgrounds:
+  - Card 1 (Job Seeker): graduate/office worker image, blue gradient overlay
+  - Card 2 (Blue Collar): construction/tradesperson image, emerald gradient overlay
+  - Card 3 (Government): government office/IAS image, purple gradient overlay
+- Stats section (add if missing): 4 animated number counters on dark glass cards
+
+**JSDashboard:**
+- Welcome banner: split layout — left text, right side has a faded worker image (analyst/laptop)
+- Career match cards: each card shows a faint icon of the role behind the text (large, 10% opacity)
+- The stat row numbers must use `font-mono` and count up from 0 on page load
+
+**JSAnalysis:**
+- The circular health gauge must have a colored ring glow (`filter: drop-shadow`)
+- Career match table rows: alternating `rgba(255,255,255,0.01)` / `transparent` backgrounds
+- Skill gap cards: left edge has a 3px colored bar matching trajectory color
+
+**JSRoadmap:**
+- Timeline vertical line: `border-left: 2px solid rgba(59,130,246,0.2)` with dots
+- Current module: pulsing blue dot + blue glow on card border
+- Locked modules: CSS `filter: grayscale(0.3) opacity(0.6)` 
+- Genome shortcut banner: amber/yellow gradient, left border thick, star icon ⚡
+
+**JSResume:**
+- Upload zone: dashed border with animated `border-color` cycling through blue shades
+- ATS score bar: thick (h-4), glowing orange fill
+- Before/After bullets: two-tone card — left half `rgba(239,68,68,0.08)` red tint, right half `rgba(16,185,129,0.08)` green tint
+- Missing skills chips: gradient border (border-image not supported — use outline trick)
+
+**JSInterview:**
+- Mic button when recording: pulsing red ring animation (rings expanding outward)
+- Score bars: fill animation with glow at the leading edge
+- Question card: large, centered, `font-size: 1.25rem`, blue left border, reads like a spotlight
+
+**BCOnboarding:**
+- Trade cards: image backgrounds (plumber photo, electrician photo etc.) with dark overlay
+- Selected card: emerald glow border + `scale(1.05)` + overlay color changes to emerald
+- Huge tap targets (min-height: 100px) — visible on mobile
+
+**BCDashboard:**
+- 4 action tiles: each has a workforce photo background with colored gradient overlay
+  - Naukri tile: worker/job image, blue overlay
+  - Yojana tile: government building, purple overlay
+  - Seekho tile: training/classroom, emerald overlay
+  - AI tile: abstract dark with particle dots, slate overlay
+- e-Shram CTA banner: orange gradient, pulsing ₹ icon
+
+**GovtLogin:**
+- Left panel: government/IAS officer image, dark overlay, white text stats
+- Right panel: clean glass card login form, purple accent
+- "Login as Demo Admin" button: purple gradient with shimmer animation
+
+**GovtDashboard:**
+- Fraud alert cards: red left border + subtle red glow, `animate-pulse` on severity dot
+- Skill gap table: urgency column uses colored fills (red for critical, orange for high)
+- Training funnel: large horizontal bars with arrow connectors, colored fills
+- Monthly trend: two-bar CSS chart, bars have colored fills with top radius
+
+---
+
+#### 10. MICRO-INTERACTIONS CHECKLIST
+
+Apply every one of these — they separate premium from amateur:
+
+```
+✓ Card hover: translateY(-2px) + shadow-lg + slightly brighter border (200ms)
+✓ Button click: scale(0.96) (100ms spring back)
+✓ Page entrance: all cards stagger-fade in (40ms delay between each card)
+✓ Number stats: count up from 0 on mount (use useEffect + requestAnimationFrame)
+✓ Progress bars: fill from 0 to value on mount (CSS transition, 1s ease-out)
+✓ SVG gauge: stroke-dashoffset animates on mount (1.2s cubic-bezier spring)
+✓ Active nav item: smooth background transition when route changes
+✓ Form inputs: focus ring with accent color glow (box-shadow: 0 0 0 3px color/20)
+✓ Score badges: scale(1.1) on hover with color glow
+✓ Toast notifications: slide in from top-right, auto-dismiss after 3s
+✓ Loading state: skeleton shimmer (left-to-right highlight sweep, not simple pulse)
+✓ Image cards: image scale(1.05) on hover (overflow: hidden on parent)
+✓ Chat bubbles: fade+slide in from bottom on new message
+✓ BC trade cards: scale(1.08) + emerald border glow on select
+```
+
+---
+
+#### 11. MOBILE-FIRST MANDATES
+
+```
+Sidebar:     Hidden on mobile (< lg:), hamburger menu icon in top-left nav bar
+Bottom nav:  BC pages have sticky bottom nav (4 icon tabs, 60px height, glass bg)
+Cards:       Single column on mobile, 2-col on md:, 3-col on lg:
+Font sizes:  Never below text-sm (14px) on mobile
+Touch targets: All tap/click elements min 44px height
+Images:      Lazy loaded (loading="lazy" on all <img>)
+Scroll:      Each section scroll independently, no horizontal overflow
+```
+
+---
+
+#### 12. LANDING PAGE — "WOW FACTOR" ADDITIONS
+
+Add these specific sections to make judges stop scrolling:
+
+**A — Animated Stats Counter Section (after hero):**
+```jsx
+// 4 cards, numbers animate up on scroll into view
+{ number: "309M", label: "Informal Workers", sublabel: "Currently invisible to digital systems" }
+{ number: "10.1%", label: "PMKVY Placement Rate", sublabel: "We target 48%+ (4.8x improvement)" }
+{ number: "22", label: "Languages Supported", sublabel: "Including Bhojpuri and Maithili" }
+{ number: "₹12,000Cr", label: "Govt Skill Budget", sublabel: "₹1,538Cr lost to fraud — we prevent this" }
+```
+
+**B — Platform Cards with Worker Images (the 3 tracks):**
+```jsx
+// Each card: workforce photo + gradient overlay + glass content panel
+// Use CSS grid-template: "image" 200px / "content" auto
+// On hover: image scales 1.05, border glows in theme color
+```
+
+**C — "How It Works" — 3-step flow for each track:**
+```
+Job Seeker:   Upload Resume → AI Analysis → Get Roadmap + Jobs
+Blue Collar:  Speak in Hindi → Skills Mapped → Jobs in 50km + Certificate
+Government:   Login → See Live District Data → Detect Fraud in Real Time
+```
+
+**D — Live Ticker (keep existing, but add more items):**
+Add data points: skill gaps, placement rates, fraud alerts from "live" Nagpur district
+
+---
+
+## ═══════════════════════════════════════════════════
+## END OF DESIGN BIBLE — NOW BUILD WITH THIS VISION
+## ═══════════════════════════════════════════════════
+
+---
+
 ## YOUR MISSION
 
 You are a **senior React engineer and UI/UX specialist**. I have a partially built React app called **KaushalBridge AI** (also called KaushalAI). Your job is to take this from a broken skeleton to a **fully working, premium-quality, demo-ready web application** — no half measures, no placeholders, no "coming soon" stubs except where explicitly told.
@@ -26,7 +546,7 @@ Browser Web Speech API (SpeechRecognition + SpeechSynthesis — no library neede
 
 ---
 
-## PREMIUM UI DESIGN SYSTEM
+ DESIGN SYSTEM
 
 Apply this design language to EVERY page. No exceptions.
 

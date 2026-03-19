@@ -2,6 +2,8 @@
 ## Paste this ENTIRE prompt into Cursor / Windsurf / Claude Projects
 
 ---
+(integrated supabase as proj named as kaushal AI 2 (prj id:notdvezebtdoolptzskp))
+
 
 ## YOUR MISSION
 

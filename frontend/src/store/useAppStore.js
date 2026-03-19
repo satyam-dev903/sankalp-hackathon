@@ -10,7 +10,7 @@ const useAppStore = create((set, get) => ({
   setUserType: (type) => set({ userType: type }),
 
   // ─── JOB SEEKER ──────────────────────────────────────
-  profile: { name: 'Rahul', district: 'Patna', education: 'Graduate', skills: ['Excel', 'SQL'], summary: 'Enthusiastic professional looking for data-driven roles.' },
+  profile: { name: 'Rahul', district: 'Patna', education: 'B.Tech', skills: ['Python', 'SQL', 'Data Analytics'], summary: 'Aspiring Data Analyst looking to leverage technical skills in a data-driven role.' },
   setProfile: (profile) => set({ profile }),
 
   analysis: {
@@ -31,6 +31,7 @@ const useAppStore = create((set, get) => ({
       const currentProfile = get().userType === 'bluecollar' ? get().bcProfile : get().profile;
       
       const payload = userData || {
+        profile: currentProfile,
         skills: currentProfile?.skills || [],
         district: currentProfile?.district || 'Patna',
         education: currentProfile?.education || 'Graduate',
@@ -195,7 +196,7 @@ const useAppStore = create((set, get) => ({
   },
 
   // ─── BLUE COLLAR ─────────────────────────────────────
-  bcProfile: { name: 'Arjun', trade: 'Skilled Worker', district: 'Lucknow', experience: 5, salary: 18000, skills: ['Driving', 'Logistics'], summary: 'Dedicated professional with extensive experience in transport and logistics.' },
+  bcProfile: { name: 'Arjun', trade: 'Driver', district: 'Lucknow', experience: 5, salary: 18000, skills: ['Driving', 'Navigation', 'Logistics'], summary: 'Experienced driver looking for commercial and heavy vehicle driving opportunities.' },
   setBcProfile: (p) => set({ bcProfile: p }),
 
   // ─── JOBS & SCHEMES ────────────────────────────────
